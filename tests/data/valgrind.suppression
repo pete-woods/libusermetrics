@@ -2,7 +2,28 @@
 #############################################################
 # False positives that recently appeared for unknown reasons
 # Possibly new version of eglibc?
+# This will probably go away once someone fixes Valgrind.
 #############################################################
+
+{
+   False positive leak on strings in x86_64
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   ...
+   fun:_ZN7testing14InitGoogleTestEPiPPc
+   fun:(below main)
+}
+
+{
+   False positive leak on strings on x86_64
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   ...
+   fun:__libc_csu_init
+   fun:(below main)
+}
 
 {
    False positive leak on strings in i386
