@@ -19,42 +19,61 @@
 #ifndef USERMETRICSINPUT_METRICIMPL_H_
 #define USERMETRICSINPUT_METRICIMPL_H_
 
-#include <libusermetricsinput/Metric.h>
-#include <libusermetricscommon/UserMetricsInterface.h>
-#include <libusermetricscommon/DataSourceInterface.h>
+#include <libusermetricsinput/Factory.h>
+#include <libusermetricsinput/MetricImpl.h>
+#include <libusermetricsinput/MetricParameters.h>
 
-#include <QtCore/QObject>
+#include <QtCore/QDir>
+#include <QtCore/QDate>
 #include <QtCore/QString>
-#include <QtDBus/QtDBus>
 
 namespace UserMetricsInput {
 
 class MetricImpl: public Metric {
 public:
-	explicit MetricImpl(const QString &dataSourceId,
-			const QString &formatString, const QString &dataSourcePath,
-			const QDBusConnection &dbusConnection, QObject *parent = 0);
+	typedef QSharedPointer<MetricImpl> Ptr;
+
+	explicit MetricImpl(const QDir &metriccDirectory,
+			const MetricParameters &parameters,
+			Factory::Ptr factory,
+			QObject *parent = 0);
 
 	virtual ~MetricImpl();
 
-	virtual MetricUpdate * update(const QString &username = "");
+	virtual MetricUpdatePtr update(const QString &username = "");
 
 	virtual void update(double value, const QString &username = "");
 
 	virtual void increment(double amount = 1.0f, const QString &username = "");
 
+	void setParameters(const MetricParameters &parameters);
+
+	void setSelf(QSharedPointer<MetricImpl> self);
+
+	void update(const QVariantList &data);
+
 protected:
-	virtual QDBusObjectPath createDataSet(const QString &usernameIn);
+	void scaleData();
 
-	QDBusConnection m_dbusConnection;
+	void loadData();
 
-	com::canonical::UserMetrics m_userMetrics;
+	void writeData();
 
-	com::canonical::usermetrics::DataSource m_dataSource;
+	QString buildJsonFile();
 
-	QString m_dataSourceId;
+	QDir m_metricDirectory;
 
-	QString m_formatString;
+	MetricParameters m_parameters;
+
+	Factory::Ptr m_factory;
+
+	QWeakPointer<MetricImpl> m_self;
+
+	QVariantList m_currentData;
+
+	QVariantList m_scaledData;
+
+	QDate m_lastUpdated;
 };
 
 }

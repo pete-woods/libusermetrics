@@ -7,7 +7,6 @@ set(
 	TestGSettingsColorThemeProvider.cpp
 	TestQVariantListModel.cpp
 	TestUserMetricsImpl.cpp
-	TestSyncedUserMetricsStore.cpp
 )
 
 add_executable(

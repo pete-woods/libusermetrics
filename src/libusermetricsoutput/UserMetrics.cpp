@@ -16,14 +16,13 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <libusermetricsoutput/SyncedUserMetricsStore.h>
 #include <libusermetricscommon/DateFactoryImpl.h>
 #include <libusermetricsoutput/GSettingsColorThemeProvider.h>
+#include <libusermetricsoutput/UserMetricsStore.h>
 #include <libusermetricsoutput/UserMetricsImpl.h>
-#include <libusermetricscommon/DBusPaths.h>
 
-using namespace UserMetricsOutput;
 using namespace UserMetricsCommon;
+using namespace UserMetricsOutput;
 
 UserMetrics::UserMetrics(QObject *parent) :
 		QObject(parent) {
@@ -33,12 +32,8 @@ UserMetrics::~UserMetrics() {
 }
 
 UserMetrics * UserMetrics::getInstance() {
-	QDBusConnection dbusConnection(QDBusConnection::systemBus());
-
 	return new UserMetricsImpl(
 			QSharedPointer<DateFactory>(new DateFactoryImpl()),
-			QSharedPointer<UserMetricsStore>(
-					new SyncedUserMetricsStore(dbusConnection)),
-			QSharedPointer<ColorThemeProvider>(
-					new GSettingsColorThemeProvider()));
+			UserMetricsStore::Ptr(new UserMetricsStore()),
+			ColorThemeProvider::Ptr(new GSettingsColorThemeProvider()));
 }

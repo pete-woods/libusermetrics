@@ -30,8 +30,8 @@ using namespace UserMetricsOutput;
 using namespace UserMetricsCommon;
 
 UserMetricsImpl::UserMetricsImpl(QSharedPointer<DateFactory> dateFactory,
-		QSharedPointer<UserMetricsStore> userDataStore,
-		QSharedPointer<ColorThemeProvider> colorThemeProvider, QObject *parent) :
+		UserMetricsStore::Ptr userDataStore,
+		ColorThemeProvider::Ptr colorThemeProvider, QObject *parent) :
 		UserMetrics(parent), m_dateFactory(dateFactory), m_userMetricsStore(
 				userDataStore), m_colorThemeProvider(colorThemeProvider), m_firstColor(
 				new ColorThemeImpl(this)), m_firstMonth(
@@ -41,8 +41,8 @@ UserMetricsImpl::UserMetricsImpl(QSharedPointer<DateFactory> dateFactory,
 				false), m_oldNoDataForUser(false) {
 	connect(this, SIGNAL(nextDataSource()), this, SLOT(nextDataSourceSlot()),
 			Qt::QueuedConnection);
-	connect(this, SIGNAL(readyForDataChange()), this, SLOT(
-			readyForDataChangeSlot()), Qt::QueuedConnection);
+	connect(this, SIGNAL(readyForDataChange()), this,
+			SLOT(readyForDataChangeSlot()), Qt::QueuedConnection);
 
 	// set up a watch for new user data appearing
 	connect(m_userMetricsStore.data(),
@@ -252,7 +252,8 @@ void UserMetricsImpl::updateCurrentDataSet(const QVariantList *newData) {
 
 	DataSourcePtr dataSource(m_userMetricsStore->dataSource(dataSourcePath));
 	if (dataSource.isNull()) {
-		qWarning() << _("Data source not found") << " [" << dataSourcePath << "]";
+		qWarning() << _("Data source not found") << " [" << dataSourcePath
+				<< "]";
 	} else {
 		ColorThemePtrPair colorTheme(
 				m_colorThemeProvider->getColorTheme(dataSourcePath));

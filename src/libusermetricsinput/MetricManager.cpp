@@ -17,28 +17,18 @@
  */
 
 #include <libusermetricsinput/MetricManagerImpl.h>
-#include <libusermetricscommon/DBusPaths.h>
-#include <QtDBus/QtDBus>
 
-using namespace UserMetricsCommon;
 using namespace UserMetricsInput;
 
 MetricManager::MetricManager(QObject *parent) :
 		QObject(parent) {
-
 }
 
 MetricManager::~MetricManager() {
 }
 
 MetricManager * MetricManager::getInstance() {
-	QDBusConnection dbusConnection(QDBusConnection::systemBus());
-
-	QDBusConnectionInterface* interface = dbusConnection.interface();
-	if (!interface->isServiceRegistered(DBusPaths::serviceName())) {
-		QDBusReply<void> reply(
-				interface->startService(DBusPaths::serviceName()));
-	}
-
-	return new MetricManagerImpl(dbusConnection);
+	Factory::Ptr factory(new Factory());
+	return new MetricManagerImpl(factory, QDir::home().filePath(".cache"),
+			qgetenv("APP_ID"));
 }

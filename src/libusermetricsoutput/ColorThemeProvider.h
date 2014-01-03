@@ -36,6 +36,7 @@ protected:
 	ColorThemeProvider(QObject *parent = 0);
 
 public:
+	typedef QSharedPointer<ColorThemeProvider> Ptr;
 
 	virtual ~ColorThemeProvider();
 

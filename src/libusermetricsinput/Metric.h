@@ -68,7 +68,7 @@ public:
 	 * The MetricUpdate object must be deleted - this is when the
 	 * actual update will be sent to the storage service.
 	 */
-	virtual MetricUpdate * update(const QString &username = "") = 0;
+	virtual MetricUpdatePtr update(const QString &username = "") = 0;
 
 	/**
 	 * @brief Update the "today" value for a simple user metric

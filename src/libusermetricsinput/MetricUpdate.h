@@ -33,7 +33,7 @@ class MetricUpdate;
 /**
  * @brief Useful to store your instance of MetricUpdate in.
  **/
-typedef QScopedPointer<MetricUpdate> MetricUpdatePtr;
+typedef QSharedPointer<MetricUpdate> MetricUpdatePtr;
 
 /**
  * @brief An update to a Metric
