@@ -22,6 +22,7 @@
 #include <libusermetricsinput/Metric.h>
 #include <libusermetricsinput/Factory.h>
 
+#include <QtCore/QDate>
 #include <gmock/gmock.h>
 
 namespace UserMetricsInput {

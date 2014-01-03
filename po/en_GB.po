@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libusermetrics\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-12 17:35+0000\n"
+"POT-Creation-Date: 2014-01-03 12:51+0000\n"
 "PO-Revision-Date: 2013-07-05 15:09+0100\n"
 "Last-Translator: Pete Woods <pete.woods@canonical.com>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "DATA_SOURCE_ID FORMAT_STRING EMPTY_DATA_STRING USERNAME <DATA>"
 msgid "DATA_SOURCE_ID FORMAT_STRING EMPTY_DATA_STRING USERNAME [AMOUNT]"
 msgstr "DATA_SOURCE_ID FORMAT_STRING EMPTY_DATA_STRING USERNAME [AMOUNT]"
 
-#: src/libusermetricsoutput/UserMetricsImpl.cpp:251
+#: src/libusermetricsoutput/UserMetricsImpl.cpp:255
 msgid "Data source not found"
 msgstr "Data source not found"
 
@@ -51,11 +51,11 @@ msgstr "Failed to register user metric:"
 msgid "Failed to update metric:"
 msgstr "Failed to update metric:"
 
-#: src/libusermetricsoutput/UserMetricsImpl.cpp:263
+#: src/libusermetricsoutput/UserMetricsImpl.cpp:267
 msgid "No data for today"
 msgstr "No data for today"
 
-#: src/libusermetricsoutput/UserMetricsImpl.cpp:194
+#: src/libusermetricsoutput/UserMetricsImpl.cpp:198
 msgid "No data sources available"
 msgstr "No data sources available"
 

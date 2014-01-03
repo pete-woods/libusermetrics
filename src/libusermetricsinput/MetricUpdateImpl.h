@@ -20,10 +20,10 @@
 #define USERMETRICSINPUT_METRICUPDATEIMPL_H_
 
 #include <QtCore/QObject>
+#include <QtCore/QSharedPointer>
 #include <QtCore/QVariantList>
 
 #include <libusermetricsinput/MetricUpdate.h>
-#include <libusermetricscommon/DataSetInterface.h>
 
 namespace UserMetricsInput {
 

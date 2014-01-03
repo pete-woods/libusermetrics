@@ -21,7 +21,6 @@
 
 #include <libusermetricsinput/Factory.h>
 #include <libusermetricsinput/MetricManager.h>
-#include <libusermetricscommon/UserMetricsInterface.h>
 
 #include <QtCore/QMap>
 
