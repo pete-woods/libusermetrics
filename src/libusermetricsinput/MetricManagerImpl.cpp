@@ -58,8 +58,10 @@ MetricPtr MetricManagerImpl::add(const MetricParameters &parameters) {
 				m_factory->newMetric(m_metricDirectory, parameters, m_factory));
 		metric = m_metrics.insert(dataSourceId, newMetric);
 	} else {
-		MetricImpl::Ptr existingMetric(metric->staticCast<MetricImpl>());
-		existingMetric->setParameters(parameters);
+		MetricImpl::Ptr existingMetric(metric->dynamicCast<MetricImpl>());
+		if(existingMetric) {
+			existingMetric->setParameters(parameters);
+		}
 	}
 	return *metric;
 }
