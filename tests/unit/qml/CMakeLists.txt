@@ -15,7 +15,7 @@ add_test(tst_QmlTests
 set_tests_properties(
 	tst_QmlTests
 	PROPERTIES
-	ENVIRONMENT "QT_QPA_PLATFORM=minimal HOME=${TEST_HOME_DIR} APP_ID=test-app"
+	ENVIRONMENT "QT_QPA_PLATFORM=minimal;HOME=${TEST_HOME_DIR};APP_ID=test-app"
 )
 
 add_subdirectory(UserMetricsTest)
