@@ -9,7 +9,7 @@
    False positive leak on strings in x86_64
    Memcheck:Leak
    fun:_Znwm
-   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
    ...
    fun:_ZN7testing14InitGoogleTestEPiPPc
    fun:(below main)
@@ -19,7 +19,7 @@
    False positive leak on strings on x86_64
    Memcheck:Leak
    fun:_Znwm
-   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
    ...
    fun:__libc_csu_init
    fun:(below main)
