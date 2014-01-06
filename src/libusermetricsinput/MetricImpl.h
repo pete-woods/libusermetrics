@@ -53,6 +53,8 @@ public:
 	void update(const QVariantList &data);
 
 protected:
+	QString label() const;
+
 	void scaleData();
 
 	void loadData();

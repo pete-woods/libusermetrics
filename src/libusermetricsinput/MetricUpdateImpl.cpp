@@ -38,5 +38,5 @@ void MetricUpdateImpl::addData(double data) {
 }
 
 void MetricUpdateImpl::addNull() {
-	m_data << "";
+	m_data << QVariant();
 }

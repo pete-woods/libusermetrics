@@ -23,7 +23,7 @@ import UserMetricsTest 0.1
 TestCase {
     name: "Increment"
     property string originalName: "test"
-    property string originalFormat: "Test Metric"
+    property string originalFormat: "Test Metric %1"
     property string originalEmptyFormat: "Nope, no data"
     property string originalDomain: "test-domain"
     property double originalMinimum: 0.0
@@ -72,7 +72,7 @@ TestCase {
 
         // Check that when changing the metric format or emptyFormat nothing else changes and
         // no new metrics are created
-        var newFormat = "Something else";
+        var newFormat = "Something else %1";
         var newEmptyFormat = "Still no data";
         var newDomain = "test-new-domain";
         metric.format = newFormat;

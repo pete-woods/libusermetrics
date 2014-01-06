@@ -18,6 +18,7 @@
 
 #include <stdexcept>
 
+#include <libusermetricscommon/Localisation.h>
 #include <libusermetricsinput/MetricImpl.h>
 
 #include <QtCore/QVariantList>
@@ -162,13 +163,6 @@ void MetricImpl::scaleData() {
 		}
 	}
 
-	QVariant head;
-	if (m_scaledData.isEmpty()) {
-		head = QVariant();
-	} else {
-		head = m_scaledData.first();
-	}
-
 	for (QVariant &variant : m_scaledData) {
 		if (variant.type() == QVariant::Double) {
 			if (min != max) {
@@ -212,12 +206,33 @@ void MetricImpl::loadData() {
 	}
 }
 
+QString MetricImpl::label() const {
+	if (m_currentData.isEmpty() || m_currentData.first().isNull()
+			|| m_parameters.formatString().isEmpty()
+			|| m_factory->currentDate() != m_lastUpdated) {
+		const QString &emptyDataString = m_parameters.emptyDataString();
+		if (emptyDataString.isEmpty()) {
+			QString empty(_("No data for today"));
+			empty.append(" (");
+			empty.append(m_parameters.id());
+			empty.append(")");
+			return empty;
+		} else {
+			return emptyDataString;
+		}
+	}
+
+	return QString(_(qPrintable(m_parameters.formatString()))).arg(
+			m_currentData.first().toString());
+}
+
 void MetricImpl::writeData() {
 	QVariantMap root;
 	root["lastUpdated"] = m_lastUpdated;
 	root["data"] = m_currentData;
 	root["scaledData"] = m_scaledData;
 	root["id"] = m_parameters.id();
+	root["label"] = label();
 	root["formatString"] = m_parameters.formatString();
 	root["emptyDataString"] = m_parameters.emptyDataString();
 	root["textDomain"] = m_parameters.textDomain();

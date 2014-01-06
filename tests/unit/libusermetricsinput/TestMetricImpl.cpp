@@ -109,8 +109,8 @@ class TestMetricUpdates: public Test, public TestMetricCommon {
 };
 
 TEST_F(TestMetricUpdates, UpdateData) {
-	EXPECT_CALL(*factory, currentDate()).Times(2).WillOnce(
-			Return(QDate(2001, 01, 5))).WillOnce(Return(QDate(2001, 01, 8)));
+	ON_CALL(*factory, currentDate()).WillByDefault(
+			Return(QDate(2001, 01, 5)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -123,6 +123,9 @@ TEST_F(TestMetricUpdates, UpdateData) {
 	EXPECT_DATA_EQ("twitter", first);
 	EXPECT_LAST_UPDATED_EQ("twitter", QDate(2001, 01, 5));
 
+	ON_CALL(*factory, currentDate()).WillByDefault(
+				Return(QDate(2001, 01, 8)));
+
 	// second update happens on the 8th of the month
 	// -> 3 new data points and 2 overwritten
 	twitter->update(second);
@@ -131,8 +134,8 @@ TEST_F(TestMetricUpdates, UpdateData) {
 }
 
 TEST_F(TestMetricUpdates, UpdateDataWithGap) {
-	EXPECT_CALL(*factory, currentDate()).Times(2).WillOnce(
-			Return(QDate(2001, 01, 5))).WillOnce(Return(QDate(2001, 01, 15)));
+	ON_CALL(*factory, currentDate()).WillByDefault(
+				Return(QDate(2001, 01, 5)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -150,6 +153,9 @@ TEST_F(TestMetricUpdates, UpdateDataWithGap) {
 	EXPECT_DATA_EQ("twitter", first);
 	EXPECT_LAST_UPDATED_EQ("twitter", QDate(2001, 01, 5));
 
+	ON_CALL(*factory, currentDate()).WillByDefault(
+				Return(QDate(2001, 01, 15)));
+
 	// second update happens on the 15th of the month
 	// -> 5 new data points, 5 nulls, and none overwritten
 	twitter->update(second);
@@ -158,11 +164,11 @@ TEST_F(TestMetricUpdates, UpdateDataWithGap) {
 }
 
 TEST_F(TestMetricUpdates, UpdateDataTotallyOverwrite) {
-	EXPECT_CALL(*factory, currentDate()).Times(2).WillOnce(
-			Return(QDate(2001, 01, 5))).WillOnce(Return(QDate(2001, 01, 7)));
+	ON_CALL(*factory, currentDate()).WillByDefault(
+					Return(QDate(2001, 01, 5)));
 
 	MetricImpl twitter(metricDir,
-			MetricParameters("twitter").formatString("foo").emptyDataString(
+			MetricParameters("twitter").formatString("foo %1").emptyDataString(
 					"empty"), factory);
 
 	QVariantList first( { 3.0, 2.0, 1.0 });
@@ -174,6 +180,9 @@ TEST_F(TestMetricUpdates, UpdateDataTotallyOverwrite) {
 	EXPECT_DATA_EQ("twitter", first);
 	EXPECT_LAST_UPDATED_EQ("twitter", QDate(2001, 01, 5));
 
+	ON_CALL(*factory, currentDate()).WillByDefault(
+					Return(QDate(2001, 01, 7)));
+
 	// second update happens on the 7th of the month
 	// -> 2 new data points, 3 overwrites, and 2 new appends
 	twitter.update(second);
@@ -182,8 +191,8 @@ TEST_F(TestMetricUpdates, UpdateDataTotallyOverwrite) {
 }
 
 TEST_F(TestMetricUpdates, IncrementOverSeveralDays) {
-	EXPECT_CALL(*factory, currentDate()).WillRepeatedly(
-			Return(QDate(2001, 03, 1)));
+	ON_CALL(*factory, currentDate()).WillByDefault(
+					Return(QDate(2001, 03, 1)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -211,8 +220,8 @@ TEST_F(TestMetricUpdates, IncrementOverSeveralDays) {
 }
 
 TEST_F(TestMetricUpdates, StoreMaximumOf62Days) {
-	EXPECT_CALL(*factory, currentDate()).WillRepeatedly(
-			Return(QDate(2001, 3, 5)));
+	ON_CALL(*factory, currentDate()).WillByDefault(
+					Return(QDate(2001, 03, 5)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -244,7 +253,7 @@ TEST_F(TestMetricUpdates, TestCanAddDataAndUpdate) {
 	}
 
 	EXPECT_DATA_EQ("data-source-id",
-			QVariantList() << 100.0 << "" << -50.0 << -22.0);
+			QVariantList() << 100.0 << QVariant() << -50.0 << -22.0);
 	EXPECT_LAST_UPDATED_EQ("data-source-id", QDate(2001, 03, 1));
 }
 
@@ -295,7 +304,7 @@ TEST_F(TestMetricUpdates, TestCanAddNullAndIncrement) {
 		MetricUpdatePtr update(metric->update());
 		update->addNull();
 	}
-	EXPECT_DATA_EQ("data-source-id", QVariantList() << "");
+	EXPECT_DATA_EQ("data-source-id", QVariantList() << QVariant());
 
 	metric->increment(5.2);
 	EXPECT_DATA_EQ("data-source-id", QVariantList() << 5.2);
