@@ -21,6 +21,7 @@
 #include <libusermetricscommon/Localisation.h>
 #include <libusermetricsinput/MetricImpl.h>
 
+#include <QtCore/QDebug>
 #include <QtCore/QVariantList>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonParseError>
@@ -244,5 +245,7 @@ void MetricImpl::writeData() {
 	if (jsonFile.open(QIODevice::WriteOnly)) {
 		jsonFile.write(document.toJson());
 		jsonFile.close();
+	} else {
+		qWarning() << "Could not write usermetrics file" << jsonFile.fileName();
 	}
 }

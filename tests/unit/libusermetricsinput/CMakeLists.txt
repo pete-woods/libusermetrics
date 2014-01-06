@@ -1,9 +1,4 @@
 
-set(TEST_HOME_DIR "/tmp/usermetrics-input-tests/")
-set(TEST_CACHE_DIR "${TEST_HOME_DIR}/.cache")
-add_definitions(-DTEST_HOME_DIR="${TEST_HOME_DIR}")
-add_definitions(-DTEST_CACHE_DIR="${TEST_CACHE_DIR}")
-
 set(
 	USERMETRICSINPUT_UNIT_TESTS_SRC
 	TestMetricImpl.cpp

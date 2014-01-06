@@ -42,13 +42,15 @@ protected:
 
 		metric.reset(new NiceMock<MockMetric>());
 
-		metricsDir.setPath(QDir(temporaryDir.path()).filePath("usermetrics"));
+		cacheDir = temporaryDir.path();
 
 		applicationIdOne = "app-id-1";
-		metricDirOne.setPath(metricsDir.filePath(applicationIdOne));
+		metricDirOne = QDir(cacheDir.filePath(applicationIdOne)).filePath(
+				"usermetrics");
 
 		applicationIdTwo = "app-id-2";
-		metricDirTwo.setPath(metricsDir.filePath(applicationIdTwo));
+		metricDirTwo = QDir(cacheDir.filePath(applicationIdTwo)).filePath(
+				"usermetrics");
 	}
 
 	static void EXPECT_DIR_CONTAINS(const QDir &dir,
@@ -67,7 +69,7 @@ protected:
 
 	QTemporaryDir temporaryDir;
 
-	QDir metricsDir;
+	QDir cacheDir;
 
 	QString applicationIdOne;
 
@@ -93,9 +95,9 @@ TEST_F(TestMetricManagerImpl, TestWillGetSameMetricForSameId) {
 	newMetric = manager->add(params);
 	EXPECT_EQ(metric, newMetric);
 
-	EXPECT_DIR_CONTAINS(QDir(temporaryDir.path()),
+	EXPECT_DIR_CONTAINS(QDir(cacheDir.filePath(applicationIdOne)),
 			QStringList() << "usermetrics");
-	EXPECT_DIR_CONTAINS(metricsDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(cacheDir, QStringList() << applicationIdOne);
 }
 
 TEST_F(TestMetricManagerImpl, CreateTwoDifferentApplications) {
@@ -122,9 +124,9 @@ TEST_F(TestMetricManagerImpl, CreateTwoDifferentApplications) {
 		EXPECT_EQ(metric, newMetric);
 	}
 
-	EXPECT_DIR_CONTAINS(QDir(temporaryDir.path()),
+	EXPECT_DIR_CONTAINS(QDir(cacheDir.filePath(applicationIdTwo)),
 			QStringList() << "usermetrics");
-	EXPECT_DIR_CONTAINS(metricsDir,
+	EXPECT_DIR_CONTAINS(cacheDir,
 			QStringList() << applicationIdOne << applicationIdTwo);
 }
 
@@ -152,9 +154,9 @@ TEST_F(TestMetricManagerImpl, TestCanAddDataSourceMultipleTimes) {
 		EXPECT_EQ(metric, newMetric);
 	}
 
-	EXPECT_DIR_CONTAINS(QDir(temporaryDir.path()),
+	EXPECT_DIR_CONTAINS(QDir(cacheDir.filePath(applicationIdOne)),
 			QStringList() << "usermetrics");
-	EXPECT_DIR_CONTAINS(metricsDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(cacheDir, QStringList() << applicationIdOne);
 }
 
 } // namespace

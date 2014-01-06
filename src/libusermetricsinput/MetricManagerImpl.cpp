@@ -32,11 +32,11 @@ MetricManagerImpl::MetricManagerImpl(Factory::Ptr factory,
 	if (applicationId.isEmpty()) {
 		throw logic_error("Invalid application ID");
 	}
-	QDir metricsDirectory(cacheDirectory.filePath("usermetrics"));
-	if (!metricsDirectory.mkpath(applicationId)) {
+	QDir applicationDirectory(cacheDirectory.filePath(applicationId));
+	if (!applicationDirectory.mkpath("usermetrics")) {
 		throw logic_error("Cannot write to cache directory");
 	}
-	m_metricDirectory = metricsDirectory.filePath(applicationId);
+	m_metricDirectory = applicationDirectory.filePath("usermetrics");
 }
 
 MetricManagerImpl::~MetricManagerImpl() {

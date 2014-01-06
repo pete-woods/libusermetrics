@@ -22,6 +22,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QTemporaryDir>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
@@ -34,7 +35,8 @@ protected:
 	TestUserMetricInputCAPI() {
 		m_originalHomeDir = qgetenv("HOME");
 		m_originalAppId = qgetenv("APP_ID");
-		qputenv("HOME", TEST_HOME_DIR);
+		EXPECT_TRUE(m_temporaryDir.isValid());
+		qputenv("HOME", qPrintable(m_temporaryDir.path()));
 		qputenv("APP_ID", "test-app");
 	}
 
@@ -44,9 +46,9 @@ protected:
 	}
 
 	QVariantMap readData(const QString &id) {
-		QDir cacheDir(TEST_CACHE_DIR);
-		QDir metricsDir(cacheDir.filePath("usermetrics"));
-		QDir metricDir(metricsDir.filePath("test-app"));
+		QDir cacheDir(QDir(m_temporaryDir.path()).filePath(".cache"));
+		QDir applicationDir(cacheDir.filePath("test-app"));
+		QDir metricDir(applicationDir.filePath("usermetrics"));
 
 		QFile file(metricDir.filePath(id + ".json"));
 		EXPECT_TRUE(file.open(QIODevice::ReadOnly));
@@ -54,6 +56,8 @@ protected:
 		file.close();
 		return doc.toVariant().toMap();
 	}
+
+	QTemporaryDir m_temporaryDir;
 
 	QByteArray m_originalHomeDir;
 

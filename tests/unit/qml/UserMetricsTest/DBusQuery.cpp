@@ -29,8 +29,8 @@ DBusQuery::DBusQuery(QObject *parent) :
 
 static QVariantMap fileContents(int index) {
 	QDir cacheDir(TEST_CACHE_DIR);
-	QDir metricsDir(cacheDir.filePath("usermetrics"));
-	QDir metricDir(metricsDir.filePath("test-app"));
+	QDir applicationDir(cacheDir.filePath("test-app"));
+	QDir metricDir(applicationDir.filePath("usermetrics"));
 
 	QFileInfoList list(
 			metricDir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot,
