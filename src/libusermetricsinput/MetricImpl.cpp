@@ -111,7 +111,7 @@ void MetricImpl::update(const QVariantList &data) {
 			const int daysToPad(daysSinceLastUpdate - newData.size());
 			// pad the data will null variants
 			for (int i(0); i < daysToPad; ++i) {
-				newData.append(QVariant(""));
+				newData.append(QVariant());
 			}
 			// append the whole of the old data
 			newData.append(m_currentData);
