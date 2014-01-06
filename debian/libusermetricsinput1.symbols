@@ -17,15 +17,25 @@ libusermetricsinput.so.1 libusermetricsinput1 #MINVER#
  (c++)"UserMetricsInput::MetricParameters::maximum(double)@Base" 1.1.1
  (c++)"UserMetricsInput::MetricParameters::minimum(double)@Base" 1.1.1
  (c++)"UserMetricsInput::MetricParameters::MetricParameters(QString const&)@Base" 1.1.1
+ (c++)"UserMetricsInput::MetricParameters::MetricParameters(UserMetricsInput::MetricParameters const&)@Base" 2.0.0
  (c++)"UserMetricsInput::MetricParameters::MetricParameters(QString const&)@Base" 1.1.1
+ (c++)"UserMetricsInput::MetricParameters::MetricParameters(UserMetricsInput::MetricParameters const&)@Base" 2.0.0
  (c++)"UserMetricsInput::MetricParameters::~MetricParameters()@Base" 1.1.1
  (c++)"UserMetricsInput::MetricParameters::~MetricParameters()@Base" 1.1.1
  (c++)"UserMetricsInput::MetricParameters::~MetricParameters()@Base" 1.1.1
+ (c++)"UserMetricsInput::MetricParameters::operator=(UserMetricsInput::MetricParameters const&)@Base" 2.0.0
  (c++)"UserMetricsInput::Metric::Metric(QObject*)@Base" 1.0.1
  (c++)"UserMetricsInput::Metric::Metric(QObject*)@Base" 1.0.1
  (c++)"UserMetricsInput::Metric::~Metric()@Base" 1.0.1
  (c++)"UserMetricsInput::Metric::~Metric()@Base" 1.0.1
  (c++)"UserMetricsInput::Metric::~Metric()@Base" 1.0.1
+ (c++)"UserMetricsInput::MetricParameters::textDomain() const@Base" 2.0.0
+ (c++)"UserMetricsInput::MetricParameters::formatString() const@Base" 2.0.0
+ (c++)"UserMetricsInput::MetricParameters::emptyDataString() const@Base" 2.0.0
+ (c++)"UserMetricsInput::MetricParameters::id() const@Base" 2.0.0
+ (c++)"UserMetricsInput::MetricParameters::type() const@Base" 2.0.0
+ (c++)"UserMetricsInput::MetricParameters::options() const@Base" 2.0.0
+ (c++)"UserMetricsInput::MetricParameters::operator==(UserMetricsInput::MetricParameters const&) const@Base" 2.0.0
  (c++)"typeinfo for UserMetricsInput::MetricUpdate@Base" 1.0.1
  (c++)"typeinfo for UserMetricsInput::MetricManager@Base" 1.0.1
  (c++)"typeinfo for UserMetricsInput::MetricParameters@Base" 1.1.1
