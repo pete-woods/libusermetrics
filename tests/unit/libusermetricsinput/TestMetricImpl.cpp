@@ -109,8 +109,7 @@ class TestMetricUpdates: public Test, public TestMetricCommon {
 };
 
 TEST_F(TestMetricUpdates, UpdateData) {
-	ON_CALL(*factory, currentDate()).WillByDefault(
-			Return(QDate(2001, 01, 5)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 01, 5)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -123,8 +122,7 @@ TEST_F(TestMetricUpdates, UpdateData) {
 	EXPECT_DATA_EQ("twitter", first);
 	EXPECT_LAST_UPDATED_EQ("twitter", QDate(2001, 01, 5));
 
-	ON_CALL(*factory, currentDate()).WillByDefault(
-				Return(QDate(2001, 01, 8)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 01, 8)));
 
 	// second update happens on the 8th of the month
 	// -> 3 new data points and 2 overwritten
@@ -134,8 +132,7 @@ TEST_F(TestMetricUpdates, UpdateData) {
 }
 
 TEST_F(TestMetricUpdates, UpdateDataWithGap) {
-	ON_CALL(*factory, currentDate()).WillByDefault(
-				Return(QDate(2001, 01, 5)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 01, 5)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -144,7 +141,7 @@ TEST_F(TestMetricUpdates, UpdateDataWithGap) {
 	QVariantList expected;
 	expected.append(second);
 	for (int i(0); i < 5; ++i) {
-		expected.append(QVariant(""));
+		expected.append(QVariant());
 	}
 	expected.append(first);
 
@@ -153,8 +150,7 @@ TEST_F(TestMetricUpdates, UpdateDataWithGap) {
 	EXPECT_DATA_EQ("twitter", first);
 	EXPECT_LAST_UPDATED_EQ("twitter", QDate(2001, 01, 5));
 
-	ON_CALL(*factory, currentDate()).WillByDefault(
-				Return(QDate(2001, 01, 15)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 01, 15)));
 
 	// second update happens on the 15th of the month
 	// -> 5 new data points, 5 nulls, and none overwritten
@@ -164,8 +160,7 @@ TEST_F(TestMetricUpdates, UpdateDataWithGap) {
 }
 
 TEST_F(TestMetricUpdates, UpdateDataTotallyOverwrite) {
-	ON_CALL(*factory, currentDate()).WillByDefault(
-					Return(QDate(2001, 01, 5)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 01, 5)));
 
 	MetricImpl twitter(metricDir,
 			MetricParameters("twitter").formatString("foo %1").emptyDataString(
@@ -180,8 +175,7 @@ TEST_F(TestMetricUpdates, UpdateDataTotallyOverwrite) {
 	EXPECT_DATA_EQ("twitter", first);
 	EXPECT_LAST_UPDATED_EQ("twitter", QDate(2001, 01, 5));
 
-	ON_CALL(*factory, currentDate()).WillByDefault(
-					Return(QDate(2001, 01, 7)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 01, 7)));
 
 	// second update happens on the 7th of the month
 	// -> 2 new data points, 3 overwrites, and 2 new appends
@@ -191,8 +185,7 @@ TEST_F(TestMetricUpdates, UpdateDataTotallyOverwrite) {
 }
 
 TEST_F(TestMetricUpdates, IncrementOverSeveralDays) {
-	ON_CALL(*factory, currentDate()).WillByDefault(
-					Return(QDate(2001, 03, 1)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 03, 1)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -220,8 +213,7 @@ TEST_F(TestMetricUpdates, IncrementOverSeveralDays) {
 }
 
 TEST_F(TestMetricUpdates, StoreMaximumOf62Days) {
-	ON_CALL(*factory, currentDate()).WillByDefault(
-					Return(QDate(2001, 03, 5)));
+	ON_CALL(*factory, currentDate()).WillByDefault(Return(QDate(2001, 03, 5)));
 
 	QSharedPointer<MetricImpl> twitter(newMetric(MetricParameters("twitter")));
 
@@ -394,13 +386,14 @@ INSTANTIATE_TEST_CASE_P(ScalesData, TestDataScaling,
 						QVariantList( { 0.0, 0.25, 0.5, 0.75, 1.0 }))));
 
 INSTANTIATE_TEST_CASE_P(TurnsBlankStringIntoNull, TestDataScaling,
-		Values(TestDataSetParamData(QVariantList( { "" }), QVariantList( {
-				QVariant() }))));
+		Values(
+				TestDataSetParamData(QVariantList( { QVariant() }),
+						QVariantList( { QVariant() }))));
 
 INSTANTIATE_TEST_CASE_P(TurnsBlankStringIntoNullWithOtherData, TestDataScaling,
 		Values(
-				TestDataSetParamData(QVariantList( { 100.0, "", 50.0, 0.0 }),
-						QVariantList( { 1.0, QVariant(), 0.5, 0.0 }))));
+				TestDataSetParamData(QVariantList( { 100.0, QVariant(), 50.0,
+						0.0 }), QVariantList( { 1.0, QVariant(), 0.5, 0.0 }))));
 
 INSTANTIATE_TEST_CASE_P(TurnsSingleValueInto0Point5, TestDataScaling,
 		Values(TestDataSetParamData(QVariantList( { 127.0 }), QVariantList( {
