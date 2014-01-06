@@ -27,12 +27,9 @@ void Components::registerTypes(const char *uri) {
 
 void Components::initializeEngine(QQmlEngine *engine, const char *uri) {
 	QDir cacheDir(TEST_CACHE_DIR);
-	if (cacheDir.exists()) {
-		for (const QFileInfo &fileInfo : cacheDir.entryInfoList(
-				QDir::Dirs | QDir::NoDotAndDotDot)) {
-			QDir removeMe(fileInfo.filePath());
-			removeMe.removeRecursively();
-		}
+	QDir metricsDir(cacheDir.filePath("usermetrics"));
+	if (metricsDir.exists()) {
+		metricsDir.removeRecursively();
 	}
 
 	m_dbusQuery.reset(new DBusQuery());
