@@ -265,8 +265,8 @@ void Infographic::writeSvg(QIODevice &output) {
 	stream.writeAttribute("width", QString::number(ceil(SVG_SIZE)));
 	stream.writeAttribute("height", QString::number(ceil(SVG_SIZE)));
 
-	writeMonth(m_secondMonth, "#ff9900", "day-past-%1", "day-past", stream);
-	writeMonth(m_firstMonth, "#e54c19", "day-present-%1", "day-present",
+	writeMonth(m_secondMonth, "#e54c19", "day-past-%1", "day-past", stream);
+	writeMonth(m_firstMonth, "#ff9900", "day-present-%1", "day-present",
 			stream);
 
 	{
