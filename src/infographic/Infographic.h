@@ -44,16 +44,18 @@ protected:
 			const QVariantList::const_iterator& end);
 
 	void writeCircle(double x, double y, double r, const QString &color,
-			double opacity, QXmlStreamWriter &stream);
+			double opacity, const QString &id, const QString &clazz,
+			QXmlStreamWriter &stream);
 
 	void writeRing(double x, double y, double r, const QString &color,
-			double opacity, QXmlStreamWriter &stream);
+			double opacity, const QString &id, const QString &clazz,
+			QXmlStreamWriter &stream);
 
 	void writeDots(int currentDay, int days, const QString &color,
 			QXmlStreamWriter &stream);
 
 	void writeMonth(const QVariantList &month, const QString &color,
-			QXmlStreamWriter &stream);
+			const QString &id, const QString &clazz, QXmlStreamWriter &stream);
 
 	void writeLabel(QXmlStreamWriter &stream);
 

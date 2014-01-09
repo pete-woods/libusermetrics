@@ -124,8 +124,11 @@ void Infographic::readJson(QIODevice &input) {
 }
 
 void Infographic::writeCircle(double x, double y, double r,
-		const QString &color, double opacity, QXmlStreamWriter &stream) {
+		const QString &color, double opacity, const QString &id,
+		const QString &clazz, QXmlStreamWriter &stream) {
 	stream.writeStartElement("circle");
+	stream.writeAttribute("id", id);
+	stream.writeAttribute("class", clazz);
 	stream.writeAttribute("stroke", "none");
 	stream.writeAttribute("opacity", QString::number(opacity));
 	stream.writeAttribute("fill", color);
@@ -136,8 +139,11 @@ void Infographic::writeCircle(double x, double y, double r,
 }
 
 void Infographic::writeRing(double x, double y, double r, const QString &color,
-		double opacity, QXmlStreamWriter &stream) {
+		double opacity, const QString &id, const QString &clazz,
+		QXmlStreamWriter &stream) {
 	stream.writeStartElement("circle");
+	stream.writeAttribute("id", id);
+	stream.writeAttribute("class", clazz);
 	stream.writeAttribute("stroke", color);
 	stream.writeAttribute("stroke-width", "1");
 	stream.writeAttribute("opacity", QString::number(opacity));
@@ -151,9 +157,12 @@ void Infographic::writeRing(double x, double y, double r, const QString &color,
 void Infographic::writeDots(int currentDay, int days, const QString &color,
 		QXmlStreamWriter &stream) {
 
+	uint dotId(0);
+
 	for (int day(0); day < currentDay; ++day) {
 		writeCircle(xComponent(DOT_DISTANCE, day, days),
-				yComponent(DOT_DISTANCE, day, days), 8.0, color, 0.4, stream);
+				yComponent(DOT_DISTANCE, day, days), 8.0, color, 0.4,
+				QString("day-alt-%1").arg(++dotId), "day-alt-past", stream);
 	}
 
 	{
@@ -161,6 +170,9 @@ void Infographic::writeDots(int currentDay, int days, const QString &color,
 		double y(yComponent(DOT_DISTANCE, currentDay, days));
 
 		stream.writeStartElement("image");
+		stream.writeAttribute("id",
+				QString("day-alt-%1").arg(QString("dot-%1").arg(++dotId)));
+		stream.writeAttribute("class", "day-alt-current");
 		stream.writeAttribute("opacity", "0.4");
 		stream.writeAttribute("x", QString::number(x - 20.0));
 		stream.writeAttribute("y", QString::number(y - 20.0));
@@ -176,19 +188,21 @@ void Infographic::writeDots(int currentDay, int days, const QString &color,
 
 	for (int day(currentDay + 1); day < days; ++day) {
 		writeRing(xComponent(DOT_DISTANCE, day, days),
-				yComponent(DOT_DISTANCE, day, days), 7.0, color, 0.4, stream);
+				yComponent(DOT_DISTANCE, day, days), 7.0, color, 0.4,
+				QString("day-alt-%1").arg(++dotId), "day-alt-future", stream);
 	}
 }
 
 void Infographic::writeMonth(const QVariantList &month, const QString &color,
-		QXmlStreamWriter &stream) {
+		const QString &id, const QString &clazz, QXmlStreamWriter &stream) {
 	int day(0);
 	int days(month.size());
 	for (const QVariant &value : month) {
 		if (!value.isNull()) {
 			writeCircle(xComponent(CENTER_CIRCLE_RADIUS, day, days),
 					yComponent(CENTER_CIRCLE_RADIUS, day, days),
-					DATA_CIRCLE_RADIUS * value.toDouble(), color, 0.3, stream);
+					DATA_CIRCLE_RADIUS * value.toDouble(), color, 0.3,
+					id.arg(day), clazz, stream);
 		}
 		++day;
 	}
@@ -225,11 +239,12 @@ void Infographic::writeLabel(QXmlStreamWriter &stream) {
 	int lineNumber(0);
 	for (const QString &line : label) {
 		stream.writeStartElement("text");
+		stream.writeAttribute("id", QString("label-line-%1").arg(lineNumber));
+		stream.writeAttribute("class", "label");
 		stream.writeAttribute("opacity", "0.6");
 		stream.writeAttribute("x", QString::number(CENTER_COORD));
 		stream.writeAttribute("y",
 				QString::number(yOffset + 50.0 * lineNumber));
-		stream.writeAttribute("width", QString::number(CENTER_CIRCLE_RADIUS));
 		stream.writeAttribute("fill", "#ffffff");
 		stream.writeAttribute("text-anchor", "middle");
 		stream.writeAttribute("font-family", "Ubuntu");
@@ -250,8 +265,9 @@ void Infographic::writeSvg(QIODevice &output) {
 	stream.writeAttribute("width", QString::number(ceil(SVG_SIZE)));
 	stream.writeAttribute("height", QString::number(ceil(SVG_SIZE)));
 
-	writeMonth(m_secondMonth, "#ff9900", stream);
-	writeMonth(m_firstMonth, "#e54c19", stream);
+	writeMonth(m_secondMonth, "#ff9900", "day-past-%1", "day-past", stream);
+	writeMonth(m_firstMonth, "#e54c19", "day-present-%1", "day-present",
+			stream);
 
 	{
 		// 689 x 691
