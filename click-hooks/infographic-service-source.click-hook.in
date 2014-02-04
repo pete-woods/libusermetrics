@@ -1,0 +1,4 @@
+Pattern: ${home}/.cache/infographic-service/sources/${id}.json
+Exec: @pkglibexecdir@/sources-update
+User-Level: yes
+Hook-Name: infographic-datasource

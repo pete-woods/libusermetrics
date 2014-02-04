@@ -1,0 +1,4 @@
+Pattern: ${home}/.cache/infographic-service/visualizers/${id}.json
+Exec: @pkglibexecdir@/visualizers-update
+User-Level: yes
+Hook-Name: infographic-visualization
