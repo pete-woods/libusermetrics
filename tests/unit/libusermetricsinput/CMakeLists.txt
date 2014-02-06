@@ -1,6 +1,7 @@
 
 set(
 	USERMETRICSINPUT_UNIT_TESTS_SRC
+	TestMetricImpl.cpp
 	TestMetricManagerImpl.cpp
 	TestUserMetricInputCAPI.cpp
 )

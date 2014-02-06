@@ -12,10 +12,6 @@ set(USERMETRICSOUTPUT_SOURCES
 	GSettingsColorThemeProvider.cpp
 	DataSet.cpp
 	DataSource.cpp
-	SyncedDataSet.cpp
-	SyncedDataSource.cpp
-	SyncedUserMetricsStore.cpp
-	SyncedUserData.cpp
 	UserData.cpp
 	UserMetrics.cpp
 	UserMetricsImpl.cpp

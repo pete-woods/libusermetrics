@@ -19,8 +19,8 @@
 #ifndef USERMETRICSINPUT_METRICMANAGERIMPL_H_
 #define USERMETRICSINPUT_METRICMANAGERIMPL_H_
 
+#include <libusermetricsinput/Factory.h>
 #include <libusermetricsinput/MetricManager.h>
-#include <libusermetricscommon/UserMetricsInterface.h>
 
 #include <QtCore/QMap>
 
@@ -28,11 +28,13 @@ namespace UserMetricsInput {
 
 class MetricManagerImpl: public MetricManager {
 public:
-	explicit MetricManagerImpl(const QDBusConnection &dbusConnection,
+	explicit MetricManagerImpl(Factory::Ptr factory,
+			const QDir &cacheDirectory, const QString &applicationId,
 			QObject *parent = 0);
 
 	virtual ~MetricManagerImpl();
 
+	Q_DECL_DEPRECATED
 	virtual MetricPtr add(const QString &dataSourceId,
 			const QString &formatString, const QString &emptyDataString = "",
 			const QString &textDomain = "");
@@ -40,9 +42,9 @@ public:
 	virtual MetricPtr add(const MetricParameters &parameters);
 
 protected:
-	QDBusConnection m_dbusConnection;
+	Factory::Ptr m_factory;
 
-	com::canonical::UserMetrics m_interface;
+	QDir m_metricDirectory;
 
 	QMap<QString, MetricPtr> m_metrics;
 };

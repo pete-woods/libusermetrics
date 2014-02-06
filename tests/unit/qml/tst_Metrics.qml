@@ -23,7 +23,7 @@ import UserMetricsTest 0.1
 TestCase {
     name: "Increment"
     property string originalName: "test"
-    property string originalFormat: "Test Metric"
+    property string originalFormat: "Test Metric %1"
     property string originalEmptyFormat: "Nope, no data"
     property string originalDomain: "test-domain"
     property double originalMinimum: 0.0
@@ -38,6 +38,9 @@ TestCase {
     }
 
     function test_metric() {
+        // Do something to make the output be written
+        metric.update(0);
+        
         // Make sure the metric properties have been set properly
         var info = dbusQuery.queryMetricInfo(1);
         compare(info.name, originalName, "Metric name was not set properly");
@@ -49,6 +52,8 @@ TestCase {
         
         metric.minimum = 0.0
         metric.maximum = 10.0
+        // Do something to make the output be written again
+        metric.update(0);
         info = dbusQuery.queryMetricInfo(1);
         compare(info.minimum, 0.0, "Metric minimum was not set properly");
         compare(info.maximum, 10.0, "Metric maximum was not set properly");
@@ -67,12 +72,14 @@ TestCase {
 
         // Check that when changing the metric format or emptyFormat nothing else changes and
         // no new metrics are created
-        var newFormat = "Something else";
+        var newFormat = "Something else %1";
         var newEmptyFormat = "Still no data";
         var newDomain = "test-new-domain";
         metric.format = newFormat;
         metric.emptyFormat = newEmptyFormat;
         metric.domain = newDomain;
+        // Do something to make the output be written again
+        metric.update(5.5);
         info = dbusQuery.queryMetricInfo(1);
         compare(info.name, originalName, "Metric name was changed without requesting it");
         compare(info.format, newFormat, "Metric format was not changed properly");
@@ -84,8 +91,12 @@ TestCase {
         // Check that when changing the metric name a new metric is created with the new name
         var newName = "another_test";
         metric.name = newName;
+        // Do something to make the output be written again
+        metric.update(0);
         info = dbusQuery.queryMetricInfo(1);
         compare(info.name, originalName, "Metric 1 name was changed instead of creating new metric");
+        // Do something to make the output be written again
+        metric.update(0);
         info = dbusQuery.queryMetricInfo(2);
         compare(info.name, newName, "Metric 2 was not created with proper name");
         compare(info.format, newFormat, "Metric 2 was not created with proper format");

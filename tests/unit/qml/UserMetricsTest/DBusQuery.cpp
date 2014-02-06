@@ -18,60 +18,55 @@
 #include <MetricInfo.h>
 
 #include <cmath>
-#include <QtDBus/QtDBus>
-#include <libqtdbustest/QProcessDBusService.h>
-#include <libqtdbustest/DBusService.h>
-#include <libusermetricscommon/UserMetricsInterface.h>
-#include <libusermetricscommon/UserDataInterface.h>
-#include <libusermetricscommon/DataSetInterface.h>
-#include <libusermetricscommon/DataSourceInterface.h>
-#include <libusermetricscommon/DBusPaths.h>
-
-using namespace QtDBusTest;
-using namespace UserMetricsCommon;
+#include <QDebug>
+#include <QDir>
+#include <QJsonDocument>
+#include <QVariantList>
 
 DBusQuery::DBusQuery(QObject *parent) :
-		QObject(parent), dbus(0) {
-	qputenv("USERMETRICS_NO_AUTH", "1");
-	qputenv("USERMETRICS_NO_COLOR_SETTINGS", "1");
-	qputenv("XDG_DATA_DIRS", DATA_DIR);
-	DBusServicePtr userMetricsService(
-			new QProcessDBusService("com.canonical.UserMetrics",
-					QDBusConnection::SystemBus, USERMETRICSSERVICE_BINARY,
-					QStringList() << ":memory:"));
-	dbus.registerService(userMetricsService);
-	dbus.startServices();
+		QObject(parent) {
+}
+
+static QVariantMap fileContents(int index) {
+	QDir cacheDir(TEST_CACHE_DIR);
+	QDir applicationDir(cacheDir.filePath("test-app"));
+	QDir metricDir(applicationDir.filePath("usermetrics"));
+
+	QFileInfoList list(
+			metricDir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot,
+					QDir::Reversed));
+	if (index - 1 >= list.length()) {
+		return QVariantMap();
+	}
+	QFile jsonFile(list.at(index - 1).filePath());
+
+	jsonFile.open(QIODevice::ReadOnly);
+	QJsonDocument document(QJsonDocument::fromJson(jsonFile.readAll()));
+	jsonFile.close();
+	return document.toVariant().toMap();
 }
 
 double DBusQuery::queryCurrentValue(int index) {
-	com::canonical::usermetrics::DataSet dataSetInterface(
-			DBusPaths::serviceName(), DBusPaths::dataSet(index),
-			dbus.systemConnection());
-	QVariantList data = dataSetInterface.data();
-	return data.at(0).toDouble();
+	return fileContents(index)["data"].toList().at(0).toDouble();
 }
 
 MetricInfo* DBusQuery::queryMetricInfo(int index) {
-	com::canonical::usermetrics::DataSource dataSourceInterface(
-			DBusPaths::serviceName(), DBusPaths::dataSource(index),
-			dbus.systemConnection());
-	if (dataSourceInterface.name().isEmpty()) {
-		return 0;
-	} else {
-		double minimum(NAN);
-		double maximum(NAN);
-		QVariantMap options(dataSourceInterface.options());
-		if (options.contains("minimum")) {
-			minimum = options["minimum"].toDouble();
-		}
-		if (options.contains("maximum")) {
-			maximum = options["maximum"].toDouble();
-		}
-
-		return new MetricInfo(dataSourceInterface.name(),
-				dataSourceInterface.formatString(),
-				dataSourceInterface.emptyDataString(),
-				dataSourceInterface.textDomain(), minimum, maximum, this);
+	QVariantMap contents(fileContents(index));
+	if (contents.isEmpty()) {
+		return nullptr;
 	}
+	QVariantMap options(contents["options"].toMap());
+	double min(nan(""));
+	double max(nan(""));
+	if (options.contains("minimum")) {
+		min = options["minimum"].toDouble();
+	}
+	if (options.contains("maximum")) {
+		max = options["maximum"].toDouble();
+	}
+	return new MetricInfo(contents["id"].toString(),
+			contents["formatString"].toString(),
+			contents["emptyDataString"].toString(),
+			contents["textDomain"].toString(), min, max, this);
 }
 

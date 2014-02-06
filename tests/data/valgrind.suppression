@@ -1,4 +1,61 @@
 
+#############################################################
+# False positives that recently appeared for unknown reasons
+# Possibly new version of eglibc?
+# This will probably go away once someone fixes Valgrind.
+#############################################################
+
+{
+   False positive leak on strings in x86_64
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
+   ...
+   fun:_ZN7testing14InitGoogleTestEPiPPc
+   fun:(below main)
+}
+
+{
+   False positive leak on strings on x86_64
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
+   ...
+   fun:__libc_csu_init
+   fun:(below main)
+}
+
+{
+   False positive leak on strings in i386
+   Memcheck:Leak
+   fun:_Znwj
+   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   ...
+   fun:_ZN7testing14InitGoogleTestEPiPPc
+   fun:(below main)
+}
+
+{
+   False positive leak on strings on i386
+   Memcheck:Leak
+   fun:_Znwj
+   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   ...
+   fun:__libc_csu_init
+   fun:(below main)
+}
+
+{
+   Qt apparently has some statically allocated data here
+   Memcheck:Leak
+   fun:calloc
+   fun:allocate_dtv
+   fun:_ZN7QThread5startENS_8PriorityE
+   obj:/usr/lib/*/libQt5Core.so.*
+   ...
+   obj:*
+}
+
 ###################
 # Leaks in Qt!
 ###################

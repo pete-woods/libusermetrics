@@ -18,7 +18,6 @@
 #define MODULES_USERMETRICSTEST_DBUSQUERY_H
 
 #include <QObject>
-#include <libqtdbustest/DBusTestRunner.h>
 
 class MetricInfo;
 
@@ -32,9 +31,6 @@ public Q_SLOTS:
 	double queryCurrentValue(int index);
 
 	MetricInfo* queryMetricInfo(int index);
-
-private:
-	QtDBusTest::DBusTestRunner dbus;
 };
 
 #endif // MODULES_USERMETRICSTEST_DBUSQUERY_H

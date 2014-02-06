@@ -176,9 +176,10 @@ UserMetricsInputMetricUpdate usermetricsinput_metric_update(
 		UserMetricsInputMetric m, const char *username) {
 	try {
 		Metric *metric(reinterpret_cast<Metric*>(m));
-		MetricUpdatePtr metricUpdate(
-				metric->update(QString::fromUtf8(username)));
-		return reinterpret_cast<UserMetricsInputMetric>(metricUpdate.take());
+		MetricUpdatePtr* metricUpdate(
+				new MetricUpdatePtr(
+						metric->update(QString::fromUtf8(username))));
+		return reinterpret_cast<UserMetricsInputMetric>(metricUpdate);
 	} catch (exception &e) {
 		fprintf(stderr, "Error creating MetricUpdate: %s\n", e.what());
 	}
@@ -188,7 +189,7 @@ UserMetricsInputMetricUpdate usermetricsinput_metric_update(
 void usermetricsinput_metricupdate_delete(
 		UserMetricsInputMetricUpdate metricUpdate) {
 	try {
-		delete reinterpret_cast<MetricUpdate*>(metricUpdate);
+		delete reinterpret_cast<MetricUpdatePtr*>(metricUpdate);
 	} catch (exception &e) {
 		fprintf(stderr, "Error deleting MetricUpdate: %s\n", e.what());
 	}
@@ -197,8 +198,8 @@ void usermetricsinput_metricupdate_delete(
 void usermetricsinput_metricupdate_add_data(UserMetricsInputMetricUpdate u,
 		double data) {
 	try {
-		MetricUpdate *metricUpdate = reinterpret_cast<MetricUpdate*>(u);
-		metricUpdate->addData(data);
+		MetricUpdatePtr *metricUpdate = reinterpret_cast<MetricUpdatePtr*>(u);
+		(*metricUpdate)->addData(data);
 	} catch (exception &e) {
 		fprintf(stderr, "Error adding data: %s\n", e.what());
 	}
@@ -206,8 +207,8 @@ void usermetricsinput_metricupdate_add_data(UserMetricsInputMetricUpdate u,
 
 void usermetricsinput_metricupdate_add_null(UserMetricsInputMetricUpdate u) {
 	try {
-		MetricUpdate *metricUpdate = reinterpret_cast<MetricUpdate*>(u);
-		metricUpdate->addNull();
+		MetricUpdatePtr *metricUpdate = reinterpret_cast<MetricUpdatePtr*>(u);
+		(*metricUpdate)->addNull();
 	} catch (exception &e) {
 		fprintf(stderr, "Error adding null: %s\n", e.what());
 	}

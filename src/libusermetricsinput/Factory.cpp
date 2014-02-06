@@ -16,28 +16,33 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#ifndef USERMETRICSOUTPUT_SYNCEDDATASET_H_
-#define USERMETRICSOUTPUT_SYNCEDDATASET_H_
+#include <libusermetricsinput/Factory.h>
+#include <libusermetricsinput/MetricImpl.h>
+#include <libusermetricsinput/MetricUpdateImpl.h>
 
-#include <libusermetricsoutput/DataSet.h>
-#include <libusermetricscommon/DataSetInterface.h>
+namespace UserMetricsInput {
 
-namespace UserMetricsOutput {
-
-class SyncedDataSet: public DataSet {
-Q_OBJECT
-
-public:
-	explicit SyncedDataSet(
-			QSharedPointer<com::canonical::usermetrics::DataSet> interface,
-			DataSourcePtr dataSource, QObject *parent = 0);
-
-	virtual ~SyncedDataSet();
-
-protected:
-	QSharedPointer<com::canonical::usermetrics::DataSet> m_interface;
-};
-
+Factory::Factory() {
 }
 
-#endif // USERMETRICSOUTPUT_SYNCEDDATASET_H_
+Factory::~Factory() {
+}
+
+MetricPtr Factory::newMetric(const QDir &metricsDirectory,
+		const MetricParameters &parameters, Factory::Ptr factory) {
+	QSharedPointer<MetricImpl> metric(
+			new MetricImpl(metricsDirectory, parameters, factory));
+	metric->setSelf(metric);
+	return metric;
+}
+
+MetricUpdatePtr Factory::newMetricUpdate(MetricPtr metric) {
+	return MetricUpdatePtr(
+			new MetricUpdateImpl(metric.staticCast<MetricImpl>()));
+}
+
+QDate Factory::currentDate() const {
+	return QDate::currentDate();
+}
+
+}

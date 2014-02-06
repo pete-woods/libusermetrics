@@ -30,6 +30,8 @@ namespace UserMetricsOutput {
 class UserMetricsStore: public QObject {
 Q_OBJECT
 public:
+	typedef QSharedPointer<UserMetricsStore> Ptr;
+
 	typedef QMap<QString, UserDataPtr> UserDataMap;
 
 	typedef UserDataMap::iterator iterator;

@@ -13,11 +13,13 @@ list(
 )
 
 set(USERMETRICSINPUT_SOURCES
+	Factory.cpp
 	Metric.cpp
 	MetricImpl.cpp
 	MetricManager.cpp
 	MetricManagerImpl.cpp
 	MetricManagerImpl.cpp
+	MetricParameters.cpp
 	MetricUpdate.cpp
 	MetricUpdateImpl.cpp
 	usermetricsinput.cpp

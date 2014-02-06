@@ -26,6 +26,12 @@ void Components::registerTypes(const char *uri) {
 }
 
 void Components::initializeEngine(QQmlEngine *engine, const char *uri) {
+	QDir cacheDir(TEST_CACHE_DIR);
+	QDir applicationDir(cacheDir.filePath(qgetenv("APP_ID")));
+	if (applicationDir.exists()) {
+		applicationDir.removeRecursively();
+	}
+
 	m_dbusQuery.reset(new DBusQuery());
 	QQmlExtensionPlugin::initializeEngine(engine, uri);
 	engine->rootContext()->setContextProperty("dbusQuery", m_dbusQuery.data());

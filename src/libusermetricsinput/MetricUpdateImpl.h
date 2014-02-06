@@ -20,20 +20,19 @@
 #define USERMETRICSINPUT_METRICUPDATEIMPL_H_
 
 #include <QtCore/QObject>
+#include <QtCore/QSharedPointer>
 #include <QtCore/QVariantList>
-#include <QtDBus/QtDBus>
 
 #include <libusermetricsinput/MetricUpdate.h>
-#include <libusermetricscommon/DataSetInterface.h>
 
 namespace UserMetricsInput {
 
-class Metric;
+class MetricImpl;
 
 class MetricUpdateImpl: public MetricUpdate {
 public:
-	explicit MetricUpdateImpl(const QString &path,
-			const QDBusConnection &dbusConnection, QObject *parent = 0);
+	explicit MetricUpdateImpl(QSharedPointer<MetricImpl> metric,
+			QObject *parent = 0);
 
 	virtual ~MetricUpdateImpl();
 
@@ -42,9 +41,7 @@ public:
 	virtual void addNull();
 
 protected:
-	QDBusConnection m_dbusConnection;
-
-	com::canonical::usermetrics::DataSet m_interface;
+	QSharedPointer<MetricImpl> m_metric;
 
 	QVariantList m_data;
 };

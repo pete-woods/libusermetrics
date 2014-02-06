@@ -17,31 +17,51 @@
  */
 
 #include <libusermetricsinput/usermetricsinput.h>
-#include <libusermetricscommon/UserMetricsInterface.h>
-#include <libusermetricscommon/UserDataInterface.h>
-#include <libusermetricscommon/DataSetInterface.h>
-#include <libusermetricscommon/DataSourceInterface.h>
-#include <libusermetricscommon/DBusPaths.h>
 
-#include <testutils/DBusTest.h>
 #include <testutils/QVariantListPrinter.h>
 
+#include <QtCore/QDir>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QTemporaryDir>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
 using namespace testing;
-using namespace UserMetricsCommon;
-using namespace UserMetricsTestUtils;
 
 namespace {
 
-class TestUserMetricInputCAPI: public DBusTest {
+class TestUserMetricInputCAPI: public Test {
 protected:
 	TestUserMetricInputCAPI() {
+		m_originalHomeDir = qgetenv("HOME");
+		m_originalAppId = qgetenv("APP_ID");
+		EXPECT_TRUE(m_temporaryDir.isValid());
+		qputenv("HOME", qPrintable(m_temporaryDir.path()));
+		qputenv("APP_ID", "test-app");
 	}
 
-	virtual ~TestUserMetricInputCAPI() {
+	~TestUserMetricInputCAPI() {
+		qputenv("HOME", m_originalHomeDir);
+		qputenv("APP_ID", m_originalAppId);
 	}
+
+	QVariantMap readData(const QString &id) {
+		QDir cacheDir(QDir(m_temporaryDir.path()).filePath(".cache"));
+		QDir applicationDir(cacheDir.filePath("test-app"));
+		QDir metricDir(applicationDir.filePath("usermetrics"));
+
+		QFile file(metricDir.filePath(id + ".json"));
+		EXPECT_TRUE(file.open(QIODevice::ReadOnly));
+		QJsonDocument doc(QJsonDocument::fromJson(file.readAll()));
+		file.close();
+		return doc.toVariant().toMap();
+	}
+
+	QTemporaryDir m_temporaryDir;
+
+	QByteArray m_originalHomeDir;
+
+	QByteArray m_originalAppId;
 };
 
 TEST_F(TestUserMetricInputCAPI, TestBasicFunctionality) {
@@ -71,7 +91,8 @@ TEST_F(TestUserMetricInputCAPI, TestBasicFunctionality) {
 	usermetricsinput_metricparameters_set_maximum(p2, 5.0);
 	usermetricsinput_metricparameters_set_type(p2, METRIC_TYPE_SYSTEM);
 
-	usermetricsinput_metricmanager_add(metricManager, p2);
+	UserMetricsInputMetric metric2 = usermetricsinput_metricmanager_add(
+			metricManager, p2);
 	usermetricsinput_metricparameters_delete(p2);
 
 	UserMetricsInputMetricUpdate metricUpdate = usermetricsinput_metric_update(
@@ -81,76 +102,55 @@ TEST_F(TestUserMetricInputCAPI, TestBasicFunctionality) {
 	usermetricsinput_metricupdate_add_data(metricUpdate, 0.1);
 	usermetricsinput_metricupdate_delete(metricUpdate);
 
-	com::canonical::UserMetrics userMetricsInterface(DBusPaths::serviceName(),
-			DBusPaths::userMetrics(), systemConnection());
+	usermetricsinput_metric_update_today(metric2, 0.0, "");
 
 	{
-		QList<QDBusObjectPath> dataSources = userMetricsInterface.dataSources();
-		EXPECT_EQ(2, dataSources.size());
-		ASSERT_EQ(DBusPaths::dataSource(1), dataSources.at(0).path());
-		ASSERT_EQ(DBusPaths::dataSource(2), dataSources.at(1).path());
-	}
-
-	{
-		com::canonical::usermetrics::DataSource dataSourceInterface(
-				DBusPaths::serviceName(), DBusPaths::dataSource(1),
-				systemConnection());
-		EXPECT_EQ(QString("data-source-id-capi"), dataSourceInterface.name());
+		QVariantMap data(readData("data-source-id-capi"));
+		EXPECT_EQ(QString("data-source-id-capi"), data["id"].toString());
 		EXPECT_EQ(QString("format string c-api %1"),
-				dataSourceInterface.formatString());
+				data["formatString"].toString());
 		EXPECT_EQ(QString("empty data string"),
-				dataSourceInterface.emptyDataString());
-		EXPECT_EQ(QString("text domain"), dataSourceInterface.textDomain());
-		EXPECT_EQ(METRIC_TYPE_USER, dataSourceInterface.metricType());
+				data["emptyDataString"].toString());
+		EXPECT_EQ(QString("text domain"), data["textDomain"].toString());
 	}
 
 	{
-		com::canonical::usermetrics::DataSource dataSourceInterface(
-				DBusPaths::serviceName(), DBusPaths::dataSource(2),
-				systemConnection());
-		EXPECT_EQ(QString("data-source-id-capi-min"),
-				dataSourceInterface.name());
+		QVariantMap data(readData("data-source-id-capi-min"));
+		EXPECT_EQ(QString("data-source-id-capi-min"), data["id"].toString());
 		QVariantMap options;
 		options["minimum"] = -4.0;
 		options["maximum"] = 5.0;
-		EXPECT_EQ(options, dataSourceInterface.options());
-		EXPECT_EQ(METRIC_TYPE_SYSTEM, dataSourceInterface.metricType());
+		EXPECT_EQ(options, data["options"].toMap());
 	}
 
-	com::canonical::usermetrics::UserData userDataInterface(
-			DBusPaths::serviceName(), DBusPaths::userData(1),
-			systemConnection());
-	EXPECT_EQ(QString("username_capi"), userDataInterface.username());
-
-	com::canonical::usermetrics::DataSet dataSetInterface(
-			DBusPaths::serviceName(), DBusPaths::dataSet(1),
-			systemConnection());
-
 	{
-		QVariantList data(dataSetInterface.data());
+		QVariantMap source(readData("data-source-id-capi"));
+		QVariantList data(source["data"].toList());
 		ASSERT_EQ(3, data.size());
 		EXPECT_FLOAT_EQ(1.0, data.at(0).toDouble());
-		EXPECT_EQ(QString(""), data.at(1).toString());
+		EXPECT_EQ(QVariant(), data.at(1));
 		EXPECT_FLOAT_EQ(0.1, data.at(2).toDouble());
 	}
 
-	usermetricsinput_metric_increment(metric, 4.5, "username_capi");
+	usermetricsinput_metric_increment(metric, 4.5, "");
 
 	{
-		QVariantList data(dataSetInterface.data());
+		QVariantMap source(readData("data-source-id-capi"));
+		QVariantList data(source["data"].toList());
 		ASSERT_EQ(3, data.size());
 		EXPECT_FLOAT_EQ(5.5, data.at(0).toDouble());
-		EXPECT_EQ(QString(""), data.at(1).toString());
+		EXPECT_EQ(QVariant(), data.at(1));
 		EXPECT_FLOAT_EQ(0.1, data.at(2).toDouble());
 	}
 
-	usermetricsinput_metric_update_today(metric, -3.5, "username_capi");
+	usermetricsinput_metric_update_today(metric, -3.5, "");
 
 	{
-		QVariantList data(dataSetInterface.data());
+		QVariantMap source(readData("data-source-id-capi"));
+		QVariantList data(source["data"].toList());
 		ASSERT_EQ(3, data.size());
 		EXPECT_FLOAT_EQ(-3.5, data.at(0).toDouble());
-		EXPECT_EQ(QString(""), data.at(1).toString());
+		EXPECT_EQ(QVariant(), data.at(1));
 		EXPECT_FLOAT_EQ(0.1, data.at(2).toDouble());
 	}
 

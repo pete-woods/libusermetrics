@@ -20,6 +20,7 @@
 #define USERMETRICSINPUT_METRICMANAGER_H_
 
 #include <libusermetricsinput/Metric.h>
+#include <libusermetricsinput/MetricParameters.h>
 
 /**
  * @{
@@ -31,34 +32,11 @@
 namespace UserMetricsInput {
 
 class MetricManager;
-class MetricParametersPrivate;
 
 /**
  * @brief Shared pointer for the MetricManager
  **/
 typedef QScopedPointer<MetricManager> MetricManagerPtr;
-
-class Q_DECL_EXPORT MetricParameters {
-public:
-
-	explicit MetricParameters(const QString &dataSourceId);
-
-	MetricParameters & formatString(const QString &formatString);
-
-	MetricParameters & emptyDataString(const QString &emptyDataString);
-
-	MetricParameters & textDomain(const QString &textDomain);
-
-	MetricParameters & minimum(double minimum);
-
-	MetricParameters & maximum(double maximum);
-
-	MetricParameters & type(MetricType type);
-
-	virtual ~MetricParameters();
-
-	QScopedPointer<MetricParametersPrivate> p;
-};
 
 /**
  * @brief Central place for registering and updating user metrics.
@@ -97,6 +75,7 @@ public:
 	 * acceptable to call this method more than once. The same Metric instance
 	 * will be returned.
 	 */
+	Q_DECL_DEPRECATED
 	virtual MetricPtr add(const QString &dataSourceId,
 			const QString &formatString, const QString &emptyDataString = "",
 			const QString &textDomain = "") = 0;

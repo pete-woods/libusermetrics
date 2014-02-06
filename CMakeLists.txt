@@ -19,17 +19,8 @@ include_directories(${Qt5Core_INCLUDE_DIRS})
 find_package(Qt5Gui REQUIRED)
 include_directories(${Qt5Gui_INCLUDE_DIRS})
 
-find_package(Qt5DBus COMPONENTS Qt5DBusMacros REQUIRED)
-include_directories(${Qt5DBus_INCLUDE_DIRS})
-
-find_package(Qt5Sql REQUIRED)
-include_directories(${Qt5Sql_INCLUDE_DIRS})
-
 find_package(Qt5XmlPatterns REQUIRED)
 include_directories(${Qt5XmlPatterns_INCLUDE_DIRS})
-
-pkg_check_modules(APPARMOR REQUIRED libapparmor REQUIRED)
-include_directories(${APPARMOR_INCLUDE_DIRS})
 
 pkg_check_modules(GSETTINGS_QT REQUIRED gsettings-qt REQUIRED)
 include_directories(${GSETTINGS_QT_INCLUDE_DIRS})
@@ -39,12 +30,6 @@ include_directories(${Qt5Test_INCLUDE_DIRS})
 
 find_package(Qt5Qml REQUIRED)
 include_directories(${Qt5Qml_INCLUDE_DIRS})
-
-pkg_check_modules(QDJANGO_DB REQUIRED qdjango-db REQUIRED)
-include_directories(${QDJANGO_DB_INCLUDE_DIRS})
-
-pkg_check_modules(QTDBUSTEST REQUIRED libqtdbustest-1 REQUIRED)
-include_directories(${QTDBUSTEST_INCLUDE_DIRS})
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

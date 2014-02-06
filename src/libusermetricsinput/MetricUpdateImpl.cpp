@@ -16,28 +16,21 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
+#include <libusermetricsinput/MetricImpl.h>
 #include <libusermetricsinput/MetricUpdateImpl.h>
-#include <libusermetricscommon/DBusPaths.h>
 
 #include <stdexcept>
 
 using namespace std;
-using namespace UserMetricsCommon;
 using namespace UserMetricsInput;
 
-MetricUpdateImpl::MetricUpdateImpl(const QString &path,
-		const QDBusConnection &dbusConnection, QObject *parent) :
-		MetricUpdate(parent), m_dbusConnection(dbusConnection), m_interface(
-				DBusPaths::serviceName(), path, dbusConnection) {
+MetricUpdateImpl::MetricUpdateImpl(QSharedPointer<MetricImpl> metric,
+		QObject *parent) :
+		MetricUpdate(parent), m_metric(metric) {
 }
 
 MetricUpdateImpl::~MetricUpdateImpl() {
-	QDBusPendingReply<void> reply(m_interface.update(m_data));
-	reply.waitForFinished();
-
-	if (reply.isError()) {
-		throw logic_error(reply.error().message().toStdString());
-	}
+	m_metric->update(m_data);
 }
 
 void MetricUpdateImpl::addData(double data) {
@@ -45,5 +38,5 @@ void MetricUpdateImpl::addData(double data) {
 }
 
 void MetricUpdateImpl::addNull() {
-	m_data << "";
+	m_data << QVariant();
 }

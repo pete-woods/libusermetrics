@@ -16,26 +16,32 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#ifndef USERMETRICSCOMMON_DBUSPATHS_H_
-#define USERMETRICSCOMMON_DBUSPATHS_H_
+#ifndef USERMETRICSINPUT_FACTORY_H_
+#define USERMETRICSINPUT_FACTORY_H_
 
-#include <QtCore/QString>
+#include <libusermetricsinput/MetricParameters.h>
 
-namespace UserMetricsCommon {
+#include <QtCore/QDir>
+#include <QtCore/QSharedPointer>
 
-class DBusPaths {
+namespace UserMetricsInput {
+
+class Factory {
 public:
-	static QString serviceName();
+	typedef QSharedPointer<Factory> Ptr;
 
-	static QString userMetrics();
+	Factory();
 
-	static QString userData(int id);
+	virtual ~Factory();
 
-	static QString dataSource(int id);
+	virtual MetricPtr newMetric(const QDir &metricsDirectory,
+			const MetricParameters &parameters, Factory::Ptr factory);
 
-	static QString dataSet(int id);
+	virtual MetricUpdatePtr newMetricUpdate(MetricPtr metric);
+
+	virtual QDate currentDate() const;
 };
 
 }
 
-#endif // USERMETRICSCOMMON_DBUSPATHS_H_
+#endif /* USERMETRICSINPUT_FACTORY_H_ */
