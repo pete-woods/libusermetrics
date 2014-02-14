@@ -1,7 +1,8 @@
 Source: libusermetrics
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-Build-Depends: cmake,
+Build-Depends: click-dev (>= 0.2.2), 
+               cmake,
                dbus,
                debhelper (>= 9),
                doxygen,
