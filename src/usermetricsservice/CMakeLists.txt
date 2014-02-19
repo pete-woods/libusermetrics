@@ -1,17 +1,27 @@
 
-#set(USERMETRICSSERVICE_SOURCES
-#)
+set(USERMETRICSSERVICE_SOURCES
+	Factory.cpp
+	Infographic.cpp
+	InfographicImpl.cpp
+	Service.cpp
+	ServiceImpl.cpp
+)
 
-#add_library(
-#	usermetricsservice
-#	STATIC
-#	${USERMETRICSSERVICE_SOURCES}
-#)
+add_library(
+	usermetricsservice
+	STATIC
+	${USERMETRICSSERVICE_SOURCES}
+)
 
 #target_link_libraries(
 #	usermetricsservice
 #	${APPARMOR_LIBRARIES}
 #)
+
+qt5_use_modules(
+	usermetricsservice
+	Core
+)
 
 ############################
 # Service executable
@@ -28,10 +38,15 @@ set_target_properties(
 	OUTPUT_NAME "usermetricsservice"
 )
 
-#target_link_libraries(
-#	usermetricsservice-bin
-#	usermetricsservice
-#)
+target_link_libraries(
+	usermetricsservice-bin
+	usermetricsservice
+)
+
+qt5_use_modules(
+	usermetricsservice-bin
+	Core
+)
 
 #########################
 # Installation

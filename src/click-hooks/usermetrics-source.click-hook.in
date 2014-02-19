@@ -1,4 +1,0 @@
-Pattern: ${home}/.cache/usermetricsservice/sources/${id}/
-Exec: @CMAKE_INSTALL_FULL_LIBEXECDIR@/libusermetrics/sources-update
-User-Level: yes
-Hook-Name: usermetrics-source

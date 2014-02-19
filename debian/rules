@@ -13,5 +13,4 @@ override_dh_makeshlibs:
 	dh_makeshlibs -V
 
 override_dh_click:
-		dh_click --name usermetrics-visualization
-		dh_click --name usermetrics-source
+		dh_click --name infographic

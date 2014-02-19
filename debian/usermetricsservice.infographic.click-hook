@@ -1,0 +1,3 @@
+Pattern: ${home}/.cache/usermetricsservice/infographics/${id}
+User-Level: yes
+Hook-Name: infographic
