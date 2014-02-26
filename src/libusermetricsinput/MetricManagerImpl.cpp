@@ -21,9 +21,24 @@
 
 #include <stdexcept>
 #include <QDebug>
+#include <QRegularExpression>
+
 
 using namespace std;
 using namespace UserMetricsInput;
+
+static QRegularExpression CLICK_REGEX(
+		"^[a-z0-9][a-z0-9+.-]+_[a-zA-Z0-9+.-]+_[0-9][a-zA-Z0-9.+:~-]*$");
+
+static void shortApplicationId(QString &applicationId) {
+	QRegularExpressionMatch match = CLICK_REGEX.match(applicationId);
+	if (match.hasMatch()) {
+		int index = applicationId.indexOf('_');
+		if (index != -1) {
+			applicationId.remove(index, applicationId.size());
+		}
+	}
+}
 
 MetricManagerImpl::MetricManagerImpl(Factory::Ptr factory,
 		const QDir &cacheDirectory, const QString &applicationId,
@@ -33,12 +48,15 @@ MetricManagerImpl::MetricManagerImpl(Factory::Ptr factory,
 		throw logic_error("Invalid application ID");
 	}
 
+	QString shortId(applicationId);
+	shortApplicationId(shortId);
+
 	QDir usermetricsDirectory(cacheDirectory.filePath("usermetrics"));
 	QDir sourcesDirectory(usermetricsDirectory.filePath("sources"));
-	if (!sourcesDirectory.mkpath(applicationId)) {
+	if (!sourcesDirectory.mkpath(shortId)) {
 		throw logic_error("Cannot write to cache directory");
 	}
-	m_metricDirectory = sourcesDirectory.filePath(applicationId);
+	m_metricDirectory = sourcesDirectory.filePath(shortId);
 }
 
 MetricManagerImpl::~MetricManagerImpl() {

@@ -27,7 +27,9 @@ void Components::registerTypes(const char *uri) {
 
 void Components::initializeEngine(QQmlEngine *engine, const char *uri) {
 	QDir cacheDir(TEST_CACHE_DIR);
-	QDir applicationDir(cacheDir.filePath(qgetenv("APP_ID")));
+	QDir usermetricsDir(cacheDir.filePath("usermetrics"));
+	QDir sourcesDir(usermetricsDir.filePath("sources"));
+	QDir applicationDir(sourcesDir.filePath(qgetenv("APP_ID")));
 	if (applicationDir.exists()) {
 		applicationDir.removeRecursively();
 	}

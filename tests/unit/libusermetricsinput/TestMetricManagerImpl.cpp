@@ -21,6 +21,7 @@
 #include <testutils/QStringPrinter.h>
 #include <unit/libusermetricsinput/Mocks.h>
 
+#include <QtCore/QDebug>
 #include <QtCore/QTemporaryDir>
 
 #include <gtest/gtest.h>
@@ -44,17 +45,20 @@ protected:
 
 		cacheDir = temporaryDir.path();
 
+		QDir usermetricsDir(cacheDir.filePath("usermetrics"));
+		sourcesDir = usermetricsDir.filePath("sources");
+
 		applicationIdOne = "app-id-1";
-		metricDirOne = QDir(cacheDir.filePath(applicationIdOne)).filePath(
-				"usermetrics");
+		metricDirOne = sourcesDir.filePath(applicationIdOne);
 
 		applicationIdTwo = "app-id-2";
-		metricDirTwo = QDir(cacheDir.filePath(applicationIdTwo)).filePath(
-				"usermetrics");
+		applicationIdTwoFull = "app-id-2_app_1.2.12345";
+		metricDirTwo = sourcesDir.filePath(applicationIdTwo);
 	}
 
 	static void EXPECT_DIR_CONTAINS(const QDir &dir,
 			const QStringList &expectedNames) {
+		qDebug() << "checking dir" << dir << "for" << expectedNames;
 		QStringList names;
 		for (const QFileInfo &fileInfo : dir.entryInfoList(
 				QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
@@ -71,11 +75,15 @@ protected:
 
 	QDir cacheDir;
 
+	QDir sourcesDir;
+
 	QString applicationIdOne;
 
 	QDir metricDirOne;
 
 	QString applicationIdTwo;
+
+	QString applicationIdTwoFull;
 
 	QDir metricDirTwo;
 };
@@ -85,8 +93,7 @@ TEST_F(TestMetricManagerImpl, TestWillGetSameMetricForSameId) {
 	params.formatString("format string %1");
 
 	MetricManagerPtr manager(
-			new MetricManagerImpl(factory, temporaryDir.path(),
-					applicationIdOne));
+			new MetricManagerImpl(factory, cacheDir, applicationIdOne));
 	EXPECT_CALL(*factory, newMetric(metricDirOne,
 					params, _)).WillOnce(Return(metric));
 	MetricPtr newMetric(manager->add(params));
@@ -95,9 +102,7 @@ TEST_F(TestMetricManagerImpl, TestWillGetSameMetricForSameId) {
 	newMetric = manager->add(params);
 	EXPECT_EQ(metric, newMetric);
 
-	EXPECT_DIR_CONTAINS(QDir(cacheDir.filePath(applicationIdOne)),
-			QStringList() << "usermetrics");
-	EXPECT_DIR_CONTAINS(cacheDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(sourcesDir, QStringList() << applicationIdOne);
 }
 
 TEST_F(TestMetricManagerImpl, CreateTwoDifferentApplications) {
@@ -106,8 +111,7 @@ TEST_F(TestMetricManagerImpl, CreateTwoDifferentApplications) {
 
 	{
 		MetricManagerPtr manager(
-				new MetricManagerImpl(factory, temporaryDir.path(),
-						applicationIdOne));
+				new MetricManagerImpl(factory, cacheDir, applicationIdOne));
 		EXPECT_CALL(*factory, newMetric(metricDirOne,
 						params, _)).WillOnce(Return(metric));
 		MetricPtr newMetric(manager->add(params));
@@ -116,17 +120,14 @@ TEST_F(TestMetricManagerImpl, CreateTwoDifferentApplications) {
 
 	{
 		MetricManagerPtr manager(
-				new MetricManagerImpl(factory, temporaryDir.path(),
-						applicationIdTwo));
+				new MetricManagerImpl(factory, cacheDir, applicationIdTwoFull));
 		EXPECT_CALL(*factory, newMetric(metricDirTwo,
 						params, _)).WillOnce(Return(metric));
 		MetricPtr newMetric(manager->add("data-source-id", "format string %1"));
 		EXPECT_EQ(metric, newMetric);
 	}
 
-	EXPECT_DIR_CONTAINS(QDir(cacheDir.filePath(applicationIdTwo)),
-			QStringList() << "usermetrics");
-	EXPECT_DIR_CONTAINS(cacheDir,
+	EXPECT_DIR_CONTAINS(sourcesDir,
 			QStringList() << applicationIdOne << applicationIdTwo);
 }
 
@@ -154,9 +155,7 @@ TEST_F(TestMetricManagerImpl, TestCanAddDataSourceMultipleTimes) {
 		EXPECT_EQ(metric, newMetric);
 	}
 
-	EXPECT_DIR_CONTAINS(QDir(cacheDir.filePath(applicationIdOne)),
-			QStringList() << "usermetrics");
-	EXPECT_DIR_CONTAINS(cacheDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(sourcesDir, QStringList() << applicationIdOne);
 }
 
-} // namespace
+}// namespace
