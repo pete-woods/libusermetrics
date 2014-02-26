@@ -55,6 +55,9 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
 
 	m_infographicWatcher.addPath(m_infographicDirectory.path());
 	m_sourcesWatcher.addPath(m_sourcesDirectory.path());
+
+	QMultiMap<QString, QString> sources(allSources());
+	sourcesChanged(sources, sources);
 }
 
 ServiceImpl::~ServiceImpl() {
@@ -111,8 +114,8 @@ void ServiceImpl::sourceChanged(const QDir &directory,
 	m_timer.start(100);
 }
 
-void ServiceImpl::flushQueue() {
-	QMultiMap<QString, QString> allSources;
+QMultiMap<QString, QString> ServiceImpl::allSources() {
+	QMultiMap<QString, QString> sources;
 
 	QMapIterator<QString, SourceDirectory::Ptr> iter(m_sources);
 	while (iter.hasNext()) {
@@ -123,10 +126,14 @@ void ServiceImpl::flushQueue() {
 		m_fileUtils->shortApplicationId(applicationId);
 
 		for (const QString &filePath : iter.value()->files()) {
-			allSources.insert(applicationId, filePath);
+			sources.insert(applicationId, filePath);
 		}
 	}
 
-	sourcesChanged(m_changedSources, allSources);
+	return sources;
+}
+
+void ServiceImpl::flushQueue() {
+	sourcesChanged(m_changedSources, allSources());
 	m_changedSources.clear();
 }

@@ -48,6 +48,8 @@ protected Q_SLOTS:
 
 	void flushQueue();
 
+	QMultiMap<QString, QString> allSources();
+
 protected:
 	FileUtils::Ptr m_fileUtils;
 
