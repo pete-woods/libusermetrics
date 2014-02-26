@@ -16,12 +16,12 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/Service.h>
+#include <usermetricsservice/SourceDirectory.h>
 
 using namespace UserMetricsService;
 
-Service::Service() {
+SourceDirectory::SourceDirectory() {
 }
 
-Service::~Service() {
+SourceDirectory::~SourceDirectory() {
 }

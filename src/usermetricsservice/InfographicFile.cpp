@@ -16,12 +16,12 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/Service.h>
+#include <usermetricsservice/InfographicFile.h>
 
 using namespace UserMetricsService;
 
-Service::Service() {
+InfographicFile::InfographicFile() {
 }
 
-Service::~Service() {
+InfographicFile::~InfographicFile() {
 }

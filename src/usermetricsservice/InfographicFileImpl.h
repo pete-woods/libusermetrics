@@ -16,12 +16,32 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/Service.h>
+#ifndef USERMETRICSSERVICE_INFOGRAPHICFILEIMPL_H_
+#define USERMETRICSSERVICE_INFOGRAPHICFILEIMPL_H_
 
-using namespace UserMetricsService;
+#include <usermetricsservice/Factory.h>
+#include <usermetricsservice/Infographic.h>
+#include <usermetricsservice/InfographicFile.h>
 
-Service::Service() {
+#include <QFile>
+
+namespace UserMetricsService {
+
+class InfographicFileImpl: public InfographicFile {
+public:
+	InfographicFileImpl(const QFile &path, const Service &service,
+			Factory &factory);
+
+	virtual ~InfographicFileImpl();
+
+protected:
+	QFile m_path;
+
+	Factory &m_factory;
+
+	QList<Infographic::Ptr> m_infographics;
+};
+
 }
 
-Service::~Service() {
-}
+#endif /* USERMETRICSSERVICE_INFOGRAPHICFILEIMPL_H_ */

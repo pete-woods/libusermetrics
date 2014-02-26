@@ -183,7 +183,7 @@ void MetricImpl::scaleData() {
 }
 
 QString MetricImpl::buildJsonFile() {
-	return m_metricDirectory.filePath(m_parameters.id() + ".json");
+	return m_metricDirectory.filePath(m_parameters.id() + ".libusermetrics.json");
 }
 
 void MetricImpl::loadData() {

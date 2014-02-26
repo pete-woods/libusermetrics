@@ -16,43 +16,41 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#ifndef USERMETRICSSERVICE_FACTORY_H_
-#define USERMETRICSSERVICE_FACTORY_H_
+#ifndef USERMETRICSSERVICE_SOURCEDIRECTORYIMPL_H_
+#define USERMETRICSSERVICE_SOURCEDIRECTORYIMPL_H_
 
 #include <usermetricsservice/FileUtils.h>
-#include <usermetricsservice/Infographic.h>
-#include <usermetricsservice/InfographicFile.h>
-#include <usermetricsservice/Service.h>
 #include <usermetricsservice/SourceDirectory.h>
 
-#include <QFile>
 #include <QDir>
+#include <QFile>
+#include <QFileSystemWatcher>
 
 namespace UserMetricsService {
 
-class Factory {
+class SourceDirectoryImpl: public SourceDirectory {
+Q_OBJECT
+
 public:
-	Factory();
+	SourceDirectoryImpl(const QDir &path, FileUtils::Ptr fileUtils);
 
-	virtual ~Factory();
+	virtual ~SourceDirectoryImpl();
 
-	virtual Service::Ptr singletonService();
+	QStringList files();
 
-	virtual FileUtils::Ptr singletonFileUtils();
+protected Q_SLOTS:
+	void fileChanged(const QString &path);
 
-	virtual InfographicFile::Ptr newInfographicFile(const QFile &path,
-			const Service &service);
-
-	virtual Infographic::Ptr newInfographic(const QVariant &config);
-
-	virtual SourceDirectory::Ptr newSourceDirectory(const QDir &path);
+	void updateFileList();
 
 protected:
-	Service::Ptr m_service;
+	QDir m_path;
 
 	FileUtils::Ptr m_fileUtils;
+
+	QFileSystemWatcher m_watcher;
 };
 
 }
 
-#endif /* USERMETRICSSERVICE_FACTORY_H_ */
+#endif /* USERMETRICSSERVICE_SOURCEDIRECTORYIMPL_H_ */

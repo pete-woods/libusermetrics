@@ -16,12 +16,22 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/Service.h>
+#ifndef USERMETRICSSERVICE_INFOGRAPHICFILE_H_
+#define USERMETRICSSERVICE_INFOGRAPHICFILE_H_
 
-using namespace UserMetricsService;
+#include <QSharedPointer>
 
-Service::Service() {
+namespace UserMetricsService {
+
+class InfographicFile {
+public:
+	typedef QSharedPointer<InfographicFile> Ptr;
+
+	InfographicFile();
+
+	virtual ~InfographicFile();
+};
+
 }
 
-Service::~Service() {
-}
+#endif /* USERMETRICSSERVICE_INFOGRAPHICFILE_H_ */

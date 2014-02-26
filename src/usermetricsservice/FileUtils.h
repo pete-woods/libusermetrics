@@ -16,12 +16,30 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/Service.h>
+#ifndef USERMETRICSSERVICE_FILEUTILS_H_
+#define USERMETRICSSERVICE_FILEUTILS_H_
 
-using namespace UserMetricsService;
+#include <QDir>
+#include <QSet>
+#include <QSharedPointer>
+#include <QString>
 
-Service::Service() {
+namespace UserMetricsService {
+
+class FileUtils {
+public:
+	typedef QSharedPointer<FileUtils> Ptr;
+
+	FileUtils();
+
+	virtual ~FileUtils();
+
+	virtual QSet<QString> listDirectory(const QDir &directory,
+			QDir::Filters filters);
+
+	void shortApplicationId(QString &applicationId);
+};
+
 }
 
-Service::~Service() {
-}
+#endif /* USERMETRICSSERVICE_FILEUTILS_H_ */

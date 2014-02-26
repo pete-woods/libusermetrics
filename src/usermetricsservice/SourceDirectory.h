@@ -16,12 +16,30 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/Service.h>
+#ifndef USERMETRICSSERVICE_SOURCEDIRECTORY_H_
+#define USERMETRICSSERVICE_SOURCEDIRECTORY_H_
 
-using namespace UserMetricsService;
+#include <QDir>
+#include <QObject>
+#include <QSharedPointer>
 
-Service::Service() {
+namespace UserMetricsService {
+
+class SourceDirectory: public QObject {
+Q_OBJECT
+public:
+	typedef QSharedPointer<SourceDirectory> Ptr;
+
+	SourceDirectory();
+
+	virtual ~SourceDirectory();
+
+	virtual QStringList files() = 0;
+
+Q_SIGNALS:
+	void sourceChanged(const QDir &directory, const QString &file);
+};
+
 }
 
-Service::~Service() {
-}
+#endif /* USERMETRICSSERVICE_SOURCEDIRECTORY_H_ */

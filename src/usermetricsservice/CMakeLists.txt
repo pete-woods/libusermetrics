@@ -1,8 +1,13 @@
 
 set(USERMETRICSSERVICE_SOURCES
 	Factory.cpp
+	FileUtils.cpp
 	Infographic.cpp
+	InfographicFile.cpp
+	InfographicFileImpl.cpp
 	InfographicImpl.cpp
+	SourceDirectory.cpp
+	SourceDirectoryImpl.cpp
 	Service.cpp
 	ServiceImpl.cpp
 )
