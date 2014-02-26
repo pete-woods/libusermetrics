@@ -60,8 +60,9 @@ void SourceDirectoryImpl::updateFileList() {
 
 	// Work out the names we need to add
 	names.subtract(m_watcher.files().toSet());
-	if (!names.isEmpty()) {
-		m_watcher.addPaths(names.toList());
+	for (const QString &name : names) {
+		m_watcher.addPath(name);
+		sourceChanged(m_path, name);
 	}
 }
 
