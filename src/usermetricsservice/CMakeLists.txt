@@ -6,6 +6,8 @@ set(USERMETRICSSERVICE_SOURCES
 	Infographic.cpp
 	InfographicImpl.cpp
 	QProcessExecutor.cpp
+	ResultTransport.cpp
+	ResultTransportImpl.cpp
 	SourceDirectory.cpp
 	SourceDirectoryImpl.cpp
 	Service.cpp

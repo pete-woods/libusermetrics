@@ -21,7 +21,7 @@
 
 #include <usermetricsservice/Executor.h>
 #include <usermetricsservice/Infographic.h>
-#include <libusermetricscommon/InfographicsInterface.h>
+#include <usermetricsservice/ResultTransport.h>
 
 #include <QFile>
 #include <QMap>
@@ -36,8 +36,7 @@ class Service;
 class InfographicImpl: public Infographic {
 public:
 	InfographicImpl(const QFile &path, Executor::Ptr executor,
-			QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
-			const Service &service);
+			ResultTransport::Ptr resultTransport, const Service &service);
 
 	virtual ~InfographicImpl();
 
@@ -60,7 +59,7 @@ protected:
 
 	Executor::Ptr m_executor;
 
-	QSharedPointer<ComCanonicalInfographicsInterface> m_infographicService;
+	ResultTransport::Ptr m_resultTransport;
 
 	QString m_exec;
 

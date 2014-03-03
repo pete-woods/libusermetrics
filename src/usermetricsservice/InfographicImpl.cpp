@@ -27,15 +27,12 @@
 #include <QRegularExpression>
 #include <QTemporaryFile>
 
-#include <sys/stat.h>
-
 using namespace UserMetricsService;
 
 InfographicImpl::InfographicImpl(const QFile &path, Executor::Ptr executor,
-		QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
-		const Service &service) :
-		m_path(path.fileName()), m_executor(executor), m_infographicService(
-				infographicService), m_type(Type::INVALID), m_ruleCount(0) {
+		ResultTransport::Ptr resultTransport, const Service &service) :
+		m_path(path.fileName()), m_executor(executor), m_resultTransport(
+				resultTransport), m_type(Type::INVALID), m_ruleCount(0) {
 
 	if (!m_path.open(QIODevice::ReadOnly)) {
 		qWarning() << "Failed to open path:" << m_path.fileName();
@@ -169,30 +166,5 @@ void InfographicImpl::execute(const QStringList &arguments) {
 		return;
 	}
 
-	QFile fifo;
-	{
-		QTemporaryFile tempFile;
-		tempFile.open();
-		tempFile.close();
-		fifo.setFileName(tempFile.fileName());
-	}
-
-	int err = mkfifo(fifo.fileName().toUtf8().constData(), 0666);
-	if (err != 0) {
-		// someone is trying something naughty
-		qWarning() << "FIFO path already existed" << fifo.fileName();
-		return;
-	}
-
-	QDBusPendingReply<> reply(
-			m_infographicService->update(m_id, arguments, fifo.fileName()));
-
-	if (fifo.open(QIODevice::WriteOnly)) {
-		fifo.write(ba);
-		fifo.close();
-	}
-
-	reply.waitForFinished();
-
-	fifo.remove();
+	m_resultTransport->send(m_id, arguments, ba);
 }

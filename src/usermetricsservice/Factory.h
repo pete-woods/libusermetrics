@@ -19,10 +19,11 @@
 #ifndef USERMETRICSSERVICE_FACTORY_H_
 #define USERMETRICSSERVICE_FACTORY_H_
 
+#include <libusermetricscommon/InfographicsInterface.h>
 #include <usermetricsservice/Executor.h>
 #include <usermetricsservice/FileUtils.h>
 #include <usermetricsservice/Infographic.h>
-#include <libusermetricscommon/InfographicsInterface.h>
+#include <usermetricsservice/ResultTransport.h>
 #include <usermetricsservice/Service.h>
 #include <usermetricsservice/SourceDirectory.h>
 
@@ -45,6 +46,8 @@ public:
 
 	virtual QSharedPointer<ComCanonicalInfographicsInterface> singletonInfographicService();
 
+	virtual ResultTransport::Ptr singletonResultTransport();
+
 	virtual Infographic::Ptr newInfographic(const QFile &path,
 			const Service &service);
 
@@ -58,6 +61,8 @@ protected:
 	Executor::Ptr m_executor;
 
 	QSharedPointer<ComCanonicalInfographicsInterface> m_infographicService;
+
+	ResultTransport::Ptr m_resultTransport;
 };
 
 }

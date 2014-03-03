@@ -19,6 +19,7 @@
 #include <usermetricsservice/Factory.h>
 #include <usermetricsservice/InfographicImpl.h>
 #include <usermetricsservice/QProcessExecutor.h>
+#include <usermetricsservice/ResultTransportImpl.h>
 #include <usermetricsservice/SourceDirectoryImpl.h>
 #include <usermetricsservice/ServiceImpl.h>
 
@@ -66,11 +67,19 @@ QSharedPointer<ComCanonicalInfographicsInterface> Factory::singletonInfographicS
 	return m_infographicService;
 }
 
+ResultTransport::Ptr Factory::singletonResultTransport() {
+	if (!m_resultTransport) {
+		m_resultTransport.reset(
+				new ResultTransportImpl(singletonInfographicService()));
+	}
+	return m_resultTransport;
+}
+
 Infographic::Ptr Factory::newInfographic(const QFile &path,
 		const Service &service) {
 	return Infographic::Ptr(
 			new InfographicImpl(path, singletonExecutor(),
-					singletonInfographicService(), service));
+					singletonResultTransport(), service));
 }
 
 SourceDirectory::Ptr Factory::newSourceDirectory(const QDir &path) {
