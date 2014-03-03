@@ -17,6 +17,7 @@
  */
 
 #include <unistd.h>
+#include <sys/apparmor.h>
 
 int main(int argc, char **argv) {
 	if (argc < 2) {
@@ -25,6 +26,9 @@ int main(int argc, char **argv) {
 
 	// Shift off the first argument
 	++argv;
+
+//	TODO Enable the profile switching
+//	aa_change_onexec("infographic");
 
 	return execv(*argv, argv);
 }

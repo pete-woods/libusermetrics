@@ -65,6 +65,11 @@ add_executable(
 	aa-exec.cpp
 )
 
+target_link_libraries(
+	aa-exec
+	${APPARMOR_LDFLAGS}
+)
+
 add_definitions(
 	-DAA_EXEC_PATH="${CMAKE_INSTALL_FULL_LIBEXECDIR}/libusermetrics/aa-exec"
 )
