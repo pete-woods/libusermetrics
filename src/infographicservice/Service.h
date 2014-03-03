@@ -19,6 +19,7 @@
 #ifndef INFOGRAPHICSERVICE_SERVICE_H_
 #define INFOGRAPHICSERVICE_SERVICE_H_
 
+#include <QCryptographicHash>
 #include <QDir>
 #include <QDBusContext>
 #include <QDBusConnection>
@@ -46,9 +47,15 @@ public Q_SLOTS:
 protected:
 	virtual unsigned int uid();
 
+	QDir userDirectory();
+
+	QDir m_directory;
+
 	QDBusConnection m_connection;
 
 	QSharedPointer<InfographicsAdaptor> m_adaptor;
+
+	QCryptographicHash m_hash;
 };
 
 }
