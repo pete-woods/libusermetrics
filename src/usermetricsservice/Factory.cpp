@@ -17,8 +17,8 @@
  */
 
 #include <usermetricsservice/Factory.h>
-#include <usermetricsservice/InfographicFileImpl.h>
 #include <usermetricsservice/InfographicImpl.h>
+#include <usermetricsservice/QProcessExecutor.h>
 #include <usermetricsservice/SourceDirectoryImpl.h>
 #include <usermetricsservice/ServiceImpl.h>
 
@@ -34,7 +34,8 @@ Service::Ptr Factory::singletonService() {
 	if (!m_service) {
 		m_service.reset(
 				new ServiceImpl(QDir::home().filePath(".cache"),
-						singletonFileUtils(), *this));
+						singletonFileUtils(), singletonInfographicService(),
+						*this));
 	}
 	return m_service;
 }
@@ -46,13 +47,29 @@ FileUtils::Ptr Factory::singletonFileUtils() {
 	return m_fileUtils;
 }
 
-InfographicFile::Ptr Factory::newInfographicFile(const QFile &path,
-		const Service &service) {
-	return InfographicFile::Ptr(new InfographicFileImpl(path, service, *this));
+Executor::Ptr Factory::singletonExecutor() {
+	if (!m_executor) {
+		m_executor.reset(new QProcessExecutor());
+	}
+	return m_executor;
 }
 
-Infographic::Ptr Factory::newInfographic(const QVariant &config) {
-	return Infographic::Ptr(new InfographicImpl(config));
+QSharedPointer<ComCanonicalInfographicsInterface> Factory::singletonInfographicService() {
+	if (!m_infographicService) {
+		m_infographicService.reset(
+				new ComCanonicalInfographicsInterface(
+						"com.canonical.Infographics",
+						"/com/canonical/Infographics",
+						QDBusConnection::systemBus()));
+	}
+	return m_infographicService;
+}
+
+Infographic::Ptr Factory::newInfographic(const QFile &path,
+		const Service &service) {
+	return Infographic::Ptr(
+			new InfographicImpl(path, singletonExecutor(),
+					singletonInfographicService(), service));
 }
 
 SourceDirectory::Ptr Factory::newSourceDirectory(const QDir &path) {

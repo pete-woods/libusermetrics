@@ -19,8 +19,11 @@
 #ifndef USERMETRICSSERVICE_INFOGRAPHICIMPL_H_
 #define USERMETRICSSERVICE_INFOGRAPHICIMPL_H_
 
+#include <usermetricsservice/Executor.h>
 #include <usermetricsservice/Infographic.h>
+#include <libusermetricscommon/InfographicsInterface.h>
 
+#include <QFile>
 #include <QMap>
 #include <QString>
 #include <QStringList>
@@ -28,9 +31,13 @@
 
 namespace UserMetricsService {
 
+class Service;
+
 class InfographicImpl: public Infographic {
 public:
-	InfographicImpl(const QVariant &config);
+	InfographicImpl(const QFile &path, Executor::Ptr executor,
+			QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
+			const Service &service);
 
 	virtual ~InfographicImpl();
 
@@ -49,6 +56,12 @@ protected:
 
 	QStringList match(const QMultiMap<QString, QString>& changedSources);
 
+	QFile m_path;
+
+	Executor::Ptr m_executor;
+
+	QSharedPointer<ComCanonicalInfographicsInterface> m_infographicService;
+
 	QString m_exec;
 
 	Type m_type;
@@ -56,6 +69,8 @@ protected:
 	QMap<QString, QStringList> m_rules;
 
 	int m_ruleCount;
+
+	QString m_id;
 
 };
 

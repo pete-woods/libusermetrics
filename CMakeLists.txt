@@ -16,6 +16,9 @@ find_package(PkgConfig REQUIRED)
 find_package(Qt5Core REQUIRED)
 include_directories(${Qt5Core_INCLUDE_DIRS})
 
+find_package(Qt5DBus REQUIRED)
+include_directories(${Qt5DBus_INCLUDE_DIRS})
+
 find_package(Qt5Gui REQUIRED)
 include_directories(${Qt5Gui_INCLUDE_DIRS})
 
@@ -35,6 +38,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/data")
+set(INFOGRAPHIC_SERVICE_XML "${DATA_DIR}/com.canonical.Infographics.xml")
 
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(INCLUDE_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/include")

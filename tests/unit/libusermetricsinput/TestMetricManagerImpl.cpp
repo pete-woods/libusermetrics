@@ -45,20 +45,18 @@ protected:
 
 		cacheDir = temporaryDir.path();
 
-		QDir usermetricsDir(cacheDir.filePath("usermetrics"));
-		sourcesDir = usermetricsDir.filePath("sources");
-
 		applicationIdOne = "app-id-1";
-		metricDirOne = sourcesDir.filePath(applicationIdOne);
+		metricDirOne = QDir(cacheDir.filePath(applicationIdOne)).filePath(
+				"usermetrics");
 
 		applicationIdTwo = "app-id-2";
 		applicationIdTwoFull = "app-id-2_app_1.2.12345";
-		metricDirTwo = sourcesDir.filePath(applicationIdTwo);
+		metricDirTwo = QDir(cacheDir.filePath(applicationIdTwo)).filePath(
+				"usermetrics");
 	}
 
 	static void EXPECT_DIR_CONTAINS(const QDir &dir,
 			const QStringList &expectedNames) {
-		qDebug() << "checking dir" << dir << "for" << expectedNames;
 		QStringList names;
 		for (const QFileInfo &fileInfo : dir.entryInfoList(
 				QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
@@ -74,8 +72,6 @@ protected:
 	QTemporaryDir temporaryDir;
 
 	QDir cacheDir;
-
-	QDir sourcesDir;
 
 	QString applicationIdOne;
 
@@ -102,7 +98,9 @@ TEST_F(TestMetricManagerImpl, TestWillGetSameMetricForSameId) {
 	newMetric = manager->add(params);
 	EXPECT_EQ(metric, newMetric);
 
-	EXPECT_DIR_CONTAINS(sourcesDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(cacheDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(cacheDir.filePath(applicationIdOne),
+			QStringList() << "usermetrics");
 }
 
 TEST_F(TestMetricManagerImpl, CreateTwoDifferentApplications) {
@@ -127,8 +125,12 @@ TEST_F(TestMetricManagerImpl, CreateTwoDifferentApplications) {
 		EXPECT_EQ(metric, newMetric);
 	}
 
-	EXPECT_DIR_CONTAINS(sourcesDir,
+	EXPECT_DIR_CONTAINS(cacheDir,
 			QStringList() << applicationIdOne << applicationIdTwo);
+	EXPECT_DIR_CONTAINS(cacheDir.filePath(applicationIdOne),
+			QStringList() << "usermetrics");
+	EXPECT_DIR_CONTAINS(cacheDir.filePath(applicationIdTwo),
+			QStringList() << "usermetrics");
 }
 
 TEST_F(TestMetricManagerImpl, TestCanAddDataSourceMultipleTimes) {
@@ -155,7 +157,9 @@ TEST_F(TestMetricManagerImpl, TestCanAddDataSourceMultipleTimes) {
 		EXPECT_EQ(metric, newMetric);
 	}
 
-	EXPECT_DIR_CONTAINS(sourcesDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(cacheDir, QStringList() << applicationIdOne);
+	EXPECT_DIR_CONTAINS(cacheDir.filePath(applicationIdOne),
+			QStringList() << "usermetrics");
 }
 
-}// namespace
+} // namespace

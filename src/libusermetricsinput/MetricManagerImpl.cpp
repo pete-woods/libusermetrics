@@ -51,12 +51,11 @@ MetricManagerImpl::MetricManagerImpl(Factory::Ptr factory,
 	QString shortId(applicationId);
 	shortApplicationId(shortId);
 
-	QDir usermetricsDirectory(cacheDirectory.filePath("usermetrics"));
-	QDir sourcesDirectory(usermetricsDirectory.filePath("sources"));
-	if (!sourcesDirectory.mkpath(shortId)) {
+	QDir applicationDirectory(cacheDirectory.filePath(shortId));
+	if (!applicationDirectory.mkpath("usermetrics")) {
 		throw logic_error("Cannot write to cache directory");
 	}
-	m_metricDirectory = sourcesDirectory.filePath(shortId);
+	m_metricDirectory = applicationDirectory.filePath("usermetrics");
 }
 
 MetricManagerImpl::~MetricManagerImpl() {

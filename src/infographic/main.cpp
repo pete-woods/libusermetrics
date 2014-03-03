@@ -28,16 +28,21 @@ using namespace UserMetricsInfographic;
 int main(int argc, char *argv[]) {
 	QCoreApplication application(argc, argv);
 
-	if (argc != 3) {
-		qWarning() << "Usage: " << argv[0] << "INPUT_FILE OUTPUT_FILE";
+	if (argc < 2) {
+		qWarning() << "Usage: " << argv[0] << "INPUT_FILE [OUTPUT_FILE]";
 		return 1;
 	}
 
 	QFile inputFile(QString::fromUtf8(argv[1]));
-	QFile outputFile(QString::fromUtf8(argv[2]));
+	QFile outputFile;
+	if (argc == 3) {
+		outputFile.setFileName(QString::fromUtf8(argv[2]));
+		outputFile.open(QIODevice::WriteOnly);
+	} else {
+		outputFile.open(1, QIODevice::WriteOnly);
+	}
 
 	inputFile.open(QIODevice::ReadOnly);
-	outputFile.open(QIODevice::WriteOnly);
 
 	Infographic infographic(inputFile, outputFile);
 

@@ -16,32 +16,22 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#ifndef USERMETRICSSERVICE_INFOGRAPHICFILEIMPL_H_
-#define USERMETRICSSERVICE_INFOGRAPHICFILEIMPL_H_
+#ifndef USERMETRICSSERVICE_QPROCESSEXECUTOR_H_
+#define USERMETRICSSERVICE_QPROCESSEXECUTOR_H_
 
-#include <usermetricsservice/Factory.h>
-#include <usermetricsservice/Infographic.h>
-#include <usermetricsservice/InfographicFile.h>
-
-#include <QFile>
+#include <usermetricsservice/Executor.h>
 
 namespace UserMetricsService {
 
-class InfographicFileImpl: public InfographicFile {
+class QProcessExecutor: public Executor {
 public:
-	InfographicFileImpl(const QFile &path, const Service &service,
-			Factory &factory);
+	QProcessExecutor();
 
-	virtual ~InfographicFileImpl();
+	virtual ~QProcessExecutor();
 
-protected:
-	QFile m_path;
-
-	Factory &m_factory;
-
-	QList<Infographic::Ptr> m_infographics;
+	QByteArray execute(const QString &program, const QStringList &arguments);
 };
 
 }
 
-#endif /* USERMETRICSSERVICE_INFOGRAPHICFILEIMPL_H_ */
+#endif /* USERMETRICSSERVICE_QPROCESSEXECUTOR_H_ */

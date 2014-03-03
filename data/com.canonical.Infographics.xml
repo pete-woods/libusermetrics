@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node name="/">
+	<interface name="com.canonical.Infographics">
+		<method name="update">
+			<!-- in -->
+			<arg type="s" name="visualizer" direction="in"/>
+			<arg type="as" name="sources" direction="in"/>
+			<arg type="s" name="file" direction="in"/>
+		</method>
+		
+		<method name="clear">
+		</method>
+	</interface>
+</node>

@@ -16,22 +16,34 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#ifndef USERMETRICSSERVICE_INFOGRAPHICFILE_H_
-#define USERMETRICSSERVICE_INFOGRAPHICFILE_H_
+#include <usermetricsservice/QProcessExecutor.h>
 
-#include <QSharedPointer>
+#include <QDebug>
+#include <QProcess>
+#include <QThread>
 
-namespace UserMetricsService {
+using namespace UserMetricsService;
 
-class InfographicFile {
-public:
-	typedef QSharedPointer<InfographicFile> Ptr;
-
-	InfographicFile();
-
-	virtual ~InfographicFile();
-};
-
+QProcessExecutor::QProcessExecutor() {
 }
 
-#endif /* USERMETRICSSERVICE_INFOGRAPHICFILE_H_ */
+QProcessExecutor::~QProcessExecutor() {
+}
+
+QByteArray QProcessExecutor::execute(const QString &program,
+		const QStringList &arguments) {
+
+	QByteArray output;
+	QProcess process;
+
+	process.start(program, arguments);
+
+	if (process.waitForFinished(5000)) {
+		output = process.readAllStandardOutput();
+	} else {
+		process.kill();
+	}
+
+	return output;
+}
+

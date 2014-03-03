@@ -17,18 +17,50 @@
  */
 
 #include <usermetricsservice/InfographicImpl.h>
+#include <usermetricsservice/Service.h>
 
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonParseError>
 #include <QRegularExpression>
+#include <QTemporaryFile>
+
+#include <sys/stat.h>
 
 using namespace UserMetricsService;
 
-InfographicImpl::InfographicImpl(const QVariant &config) :
-		m_type(Type::INVALID), m_ruleCount(0) {
+InfographicImpl::InfographicImpl(const QFile &path, Executor::Ptr executor,
+		QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
+		const Service &service) :
+		m_path(path.fileName()), m_executor(executor), m_infographicService(
+				infographicService), m_type(Type::INVALID), m_ruleCount(0) {
 
-	QVariantMap map(config.toMap());
+	if (!m_path.open(QIODevice::ReadOnly)) {
+		qWarning() << "Failed to open path:" << m_path.fileName();
+		return;
+	}
+
+	QByteArray ba(m_path.readAll());
+	m_path.close();
+
+	QJsonParseError error;
+	QJsonDocument document(QJsonDocument::fromJson(ba, &error));
+	if (error.error != QJsonParseError::NoError) {
+		qWarning() << "Failed to parse infographic JSON document:"
+				<< m_path.fileName() << error.errorString();
+		return;
+	}
+
+	if (document.isNull() || document.isEmpty()) {
+		return;
+	}
+
+	QFileInfo fileInfo(m_path);
+	m_id = fileInfo.fileName();
+
+	QVariantMap map(document.toVariant().toMap());
 
 	m_exec = map["exec"].toString();
 
@@ -46,6 +78,11 @@ InfographicImpl::InfographicImpl(const QVariant &config) :
 		QStringList rules(i.value().toStringList());
 		m_rules[i.key()] = rules;
 		m_ruleCount += rules.size();
+	}
+
+	if (isValid()) {
+		connect(&service, &Service::sourcesChanged, this,
+				&Infographic::sourcesChanged);
 	}
 }
 
@@ -124,6 +161,33 @@ void InfographicImpl::aggregate(
 	}
 }
 
-void InfographicImpl::execute(const QStringList &args) {
-	qDebug() << "execute" << m_exec << args;
+void InfographicImpl::execute(const QStringList &arguments) {
+	QByteArray ba(m_executor->execute(m_exec, arguments));
+
+	QFile fifo;
+	{
+		QTemporaryFile tempFile;
+		tempFile.open();
+		tempFile.close();
+		fifo.setFileName(tempFile.fileName());
+	}
+
+	int err = mkfifo(fifo.fileName().toUtf8().constData(), 0666);
+	if (err != 0) {
+		// someone is trying something naughty
+		qWarning() << "FIFO path already existed" << fifo.fileName();
+		return;
+	}
+
+	QDBusPendingReply<> reply(
+			m_infographicService->update(m_id, arguments, fifo.fileName()));
+
+	if (fifo.open(QIODevice::WriteOnly)) {
+		fifo.write(ba);
+		fifo.close();
+	}
+
+	reply.waitForFinished();
+
+	fifo.remove();
 }

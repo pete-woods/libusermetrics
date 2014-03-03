@@ -16,12 +16,31 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/InfographicFile.h>
+#include <infographicservice/Service.h>
 
-using namespace UserMetricsService;
+#include <QCoreApplication>
+#include <QDebug>
+#include <csignal>
 
-InfographicFile::InfographicFile() {
+using namespace InfographicService;
+
+static void exitQt(int sig) {
+	Q_UNUSED(sig);
+	QCoreApplication::exit(0);
 }
 
-InfographicFile::~InfographicFile() {
+int main(int argc, char *argv[]) {
+	QCoreApplication application(argc, argv);
+
+	signal(SIGINT, &exitQt);
+	signal(SIGTERM, &exitQt);
+
+	try {
+		Service service(QDir("/var/lib/usermetrics"),
+				QDBusConnection::systemBus());
+		return application.exec();
+	} catch (std::exception &e) {
+		qWarning() << "Infographic Service:" << e.what();
+		return 1;
+	}
 }

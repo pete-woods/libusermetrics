@@ -35,6 +35,7 @@ Q_OBJECT
 
 public:
 	ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
+			QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
 			Factory &factory);
 
 	virtual ~ServiceImpl();
@@ -51,13 +52,17 @@ protected Q_SLOTS:
 	QMultiMap<QString, QString> allSources();
 
 protected:
+	QDir m_cacheDirectory;
+
 	FileUtils::Ptr m_fileUtils;
+
+	QSharedPointer<ComCanonicalInfographicsInterface> m_infographicService;
 
 	Factory &m_factory;
 
 	QTimer m_timer;
 
-	QDir m_infographicDirectory;
+	QList<QString> m_infographicDirectories;
 
 	QFileSystemWatcher m_infographicWatcher;
 
@@ -65,7 +70,7 @@ protected:
 
 	QFileSystemWatcher m_sourcesWatcher;
 
-	QMap<QString, InfographicFile::Ptr> m_infographics;
+	QMap<QString, Infographic::Ptr> m_infographics;
 
 	QMap<QString, SourceDirectory::Ptr> m_sources;
 

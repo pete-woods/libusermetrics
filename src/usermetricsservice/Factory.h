@@ -19,9 +19,10 @@
 #ifndef USERMETRICSSERVICE_FACTORY_H_
 #define USERMETRICSSERVICE_FACTORY_H_
 
+#include <usermetricsservice/Executor.h>
 #include <usermetricsservice/FileUtils.h>
 #include <usermetricsservice/Infographic.h>
-#include <usermetricsservice/InfographicFile.h>
+#include <libusermetricscommon/InfographicsInterface.h>
 #include <usermetricsservice/Service.h>
 #include <usermetricsservice/SourceDirectory.h>
 
@@ -40,10 +41,12 @@ public:
 
 	virtual FileUtils::Ptr singletonFileUtils();
 
-	virtual InfographicFile::Ptr newInfographicFile(const QFile &path,
-			const Service &service);
+	virtual Executor::Ptr singletonExecutor();
 
-	virtual Infographic::Ptr newInfographic(const QVariant &config);
+	virtual QSharedPointer<ComCanonicalInfographicsInterface> singletonInfographicService();
+
+	virtual Infographic::Ptr newInfographic(const QFile &path,
+			const Service &service);
 
 	virtual SourceDirectory::Ptr newSourceDirectory(const QDir &path);
 
@@ -51,6 +54,10 @@ protected:
 	Service::Ptr m_service;
 
 	FileUtils::Ptr m_fileUtils;
+
+	Executor::Ptr m_executor;
+
+	QSharedPointer<ComCanonicalInfographicsInterface> m_infographicService;
 };
 
 }

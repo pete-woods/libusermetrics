@@ -26,8 +26,10 @@ using namespace UserMetricsService;
 using namespace std;
 
 ServiceImpl::ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
+		QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
 		Factory &factory) :
-		m_fileUtils(fileUtils), m_factory(factory) {
+		m_cacheDirectory(cacheDirectory), m_fileUtils(fileUtils), m_infographicService(
+				infographicService), m_factory(factory) {
 	QDir usermetricsDirectory(cacheDirectory.filePath("usermetrics"));
 
 	if (!usermetricsDirectory.mkpath("infographics")) {
@@ -38,7 +40,7 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
 		throw logic_error("Cannot create sources directory");
 	}
 
-	m_infographicDirectory = usermetricsDirectory.filePath("infographics");
+	m_infographicDirectories << usermetricsDirectory.filePath("infographics");
 	m_sourcesDirectory = usermetricsDirectory.filePath("sources");
 
 	m_timer.setSingleShot(true);
@@ -53,8 +55,10 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
 	updateInfographicList();
 	updateSourcesList();
 
-	m_infographicWatcher.addPath(m_infographicDirectory.path());
+	m_infographicWatcher.addPaths(m_infographicDirectories);
 	m_sourcesWatcher.addPath(m_sourcesDirectory.path());
+
+	m_infographicService->clear().waitForFinished();
 
 	QMultiMap<QString, QString> sources(allSources());
 	sourcesChanged(sources, sources);
@@ -64,8 +68,13 @@ ServiceImpl::~ServiceImpl() {
 }
 
 void ServiceImpl::updateInfographicList() {
-	QSet<QString> names(
-			m_fileUtils->listDirectory(m_infographicDirectory, QDir::Files));
+	QSet<QString> names;
+
+	for (const QString &directory : m_infographicDirectories) {
+		names.unite(m_fileUtils->listDirectory(directory, QDir::Files));
+	}
+
+	qDebug() << "found infographics" << names;
 
 	// Remove deleted infographics
 	QSet<QString> toRemove(m_infographics.keys().toSet().subtract(names));
@@ -76,13 +85,23 @@ void ServiceImpl::updateInfographicList() {
 	// Work out the names we need to add
 	names.subtract(m_infographics.keys().toSet());
 	for (const QString &name : names) {
-		m_infographics.insert(name, m_factory.newInfographicFile(name, *this));
+		m_infographics.insert(name, m_factory.newInfographic(name, *this));
 	}
 }
 
 void ServiceImpl::updateSourcesList() {
-	QSet<QString> names(
+	QSet<QString> fullNames(
 			m_fileUtils->listDirectory(m_sourcesDirectory, QDir::Dirs));
+
+	QSet<QString> names;
+	for (const QString &name : fullNames) {
+		QFileInfo fileInfo(name);
+		QString shortName(fileInfo.completeBaseName());
+		m_fileUtils->shortApplicationId(shortName);
+		QDir applicationDirectory(m_cacheDirectory.filePath(shortName));
+		applicationDirectory.mkpath("usermetrics");
+		names << applicationDirectory.filePath("usermetrics");
+	}
 
 	// Remove deleted sources
 	QSet<QString> toRemove(m_sources.keys().toSet().subtract(names));

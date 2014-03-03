@@ -1,11 +1,11 @@
 
 set(USERMETRICSSERVICE_SOURCES
+	Executor.cpp
 	Factory.cpp
 	FileUtils.cpp
 	Infographic.cpp
-	InfographicFile.cpp
-	InfographicFileImpl.cpp
 	InfographicImpl.cpp
+	QProcessExecutor.cpp
 	SourceDirectory.cpp
 	SourceDirectoryImpl.cpp
 	Service.cpp
@@ -18,14 +18,15 @@ add_library(
 	${USERMETRICSSERVICE_SOURCES}
 )
 
-#target_link_libraries(
-#	usermetricsservice
-#	${APPARMOR_LIBRARIES}
-#)
+target_link_libraries(
+	usermetricsservice
+	usermetricscommon
+)
 
 qt5_use_modules(
 	usermetricsservice
 	Core
+	DBus
 )
 
 ############################
@@ -54,10 +55,22 @@ qt5_use_modules(
 )
 
 #########################
+# Sandbox executable
+#########################
+
+add_executable(
+	aa-exec
+	aa-exec.cpp
+)
+
+#########################
 # Installation
 #########################
 
 install(
-  TARGETS usermetricsservice-bin
-  RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/libusermetrics"
+	TARGETS
+		usermetricsservice-bin
+		aa-exec
+	RUNTIME DESTINATION
+		"${CMAKE_INSTALL_FULL_LIBEXECDIR}/libusermetrics"
 )
