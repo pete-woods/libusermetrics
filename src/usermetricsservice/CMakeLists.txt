@@ -65,6 +65,10 @@ add_executable(
 	aa-exec.cpp
 )
 
+add_definitions(
+	-DAA_EXEC_PATH="${CMAKE_INSTALL_FULL_LIBEXECDIR}/libusermetrics/aa-exec"
+)
+
 #########################
 # Installation
 #########################

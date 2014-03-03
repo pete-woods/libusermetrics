@@ -24,7 +24,12 @@
 
 using namespace UserMetricsService;
 
-QProcessExecutor::QProcessExecutor() {
+QProcessExecutor::QProcessExecutor(const QDir &cacheDirectory,
+		const QString &aaExec) :
+		m_aaExec(aaExec) {
+
+	m_usermetricsDirectory = cacheDirectory.filePath("usermetrics");
+	m_tempDirectory = m_usermetricsDirectory.filePath("tmp");
 }
 
 QProcessExecutor::~QProcessExecutor() {
@@ -33,13 +38,34 @@ QProcessExecutor::~QProcessExecutor() {
 QByteArray QProcessExecutor::execute(const QString &program,
 		const QStringList &arguments) {
 
+	m_tempDirectory.removeRecursively();
+	m_usermetricsDirectory.mkpath("tmp");
+
 	QByteArray output;
+
+	QStringList finalArguments;
+	finalArguments << program;
+	for (int i(0); i < arguments.size(); ++i) {
+		const QString &argument(arguments[i]);
+		QString destination(
+				m_tempDirectory.filePath(QString::number(i) + ".svg"));
+		if (!QFile::copy(argument, destination)) {
+			qWarning() << "Failed to copy file" << argument << destination;
+			return output;
+		}
+		finalArguments << destination;
+	}
+
 	QProcess process;
 
-	process.start(program, arguments);
+	process.start(m_aaExec, finalArguments);
 
 	if (process.waitForFinished(5000)) {
 		output = process.readAllStandardOutput();
+		QByteArray error(process.readAllStandardError());
+		if (!error.isEmpty()) {
+			qWarning() << error;
+		}
 	} else {
 		process.kill();
 	}

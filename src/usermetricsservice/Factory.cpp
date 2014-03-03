@@ -51,7 +51,9 @@ FileUtils::Ptr Factory::singletonFileUtils() {
 
 Executor::Ptr Factory::singletonExecutor() {
 	if (!m_executor) {
-		m_executor.reset(new QProcessExecutor());
+		m_executor.reset(
+				new QProcessExecutor(QDir::home().filePath(".cache"),
+						AA_EXEC_PATH));
 	}
 	return m_executor;
 }

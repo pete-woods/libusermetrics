@@ -21,15 +21,24 @@
 
 #include <usermetricsservice/Executor.h>
 
+#include <QDir>
+
 namespace UserMetricsService {
 
 class QProcessExecutor: public Executor {
 public:
-	QProcessExecutor();
+	QProcessExecutor(const QDir &cacheDirectory, const QString &aaExec);
 
 	virtual ~QProcessExecutor();
 
 	QByteArray execute(const QString &program, const QStringList &arguments);
+
+protected:
+	QDir m_usermetricsDirectory;
+
+	QDir m_tempDirectory;
+
+	QString m_aaExec;
 };
 
 }
