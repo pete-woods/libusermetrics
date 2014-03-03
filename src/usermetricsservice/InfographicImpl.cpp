@@ -58,7 +58,7 @@ InfographicImpl::InfographicImpl(const QFile &path, Executor::Ptr executor,
 	}
 
 	QFileInfo fileInfo(m_path);
-	m_id = fileInfo.fileName();
+	m_id = fileInfo.completeBaseName();
 
 	QVariantMap map(document.toVariant().toMap());
 
@@ -163,6 +163,11 @@ void InfographicImpl::aggregate(
 
 void InfographicImpl::execute(const QStringList &arguments) {
 	QByteArray ba(m_executor->execute(m_exec, arguments));
+
+	if (ba.isEmpty()) {
+		qWarning() << "No data provided by infographic" << m_exec;
+		return;
+	}
 
 	QFile fifo;
 	{

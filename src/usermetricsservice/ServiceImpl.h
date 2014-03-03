@@ -34,7 +34,8 @@ class ServiceImpl: public Service {
 Q_OBJECT
 
 public:
-	ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
+	ServiceImpl(const QDir &cacheDirectory, const QDir &packageInfographics,
+			FileUtils::Ptr fileUtils,
 			QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
 			Factory &factory);
 

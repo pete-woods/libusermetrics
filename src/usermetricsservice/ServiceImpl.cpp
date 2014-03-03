@@ -25,7 +25,8 @@
 using namespace UserMetricsService;
 using namespace std;
 
-ServiceImpl::ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
+ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
+		const QDir &packageInfographics, FileUtils::Ptr fileUtils,
 		QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
 		Factory &factory) :
 		m_cacheDirectory(cacheDirectory), m_fileUtils(fileUtils), m_infographicService(
@@ -41,6 +42,7 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory, FileUtils::Ptr fileUtils,
 	}
 
 	m_infographicDirectories << usermetricsDirectory.filePath("infographics");
+	m_infographicDirectories << packageInfographics.path();
 	m_sourcesDirectory = usermetricsDirectory.filePath("sources");
 
 	m_timer.setSingleShot(true);
@@ -73,8 +75,6 @@ void ServiceImpl::updateInfographicList() {
 	for (const QString &directory : m_infographicDirectories) {
 		names.unite(m_fileUtils->listDirectory(directory, QDir::Files));
 	}
-
-	qDebug() << "found infographics" << names;
 
 	// Remove deleted infographics
 	QSet<QString> toRemove(m_infographics.keys().toSet().subtract(names));
