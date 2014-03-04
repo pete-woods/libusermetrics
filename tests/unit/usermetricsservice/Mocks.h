@@ -28,6 +28,7 @@ namespace Mocks {
 
 class MockFactory: public Factory {
 public:
+
 	MOCK_METHOD0(singletonService, Service::Ptr());
 
 	MOCK_METHOD0(singletonFileUtils, FileUtils::Ptr());
@@ -38,22 +39,40 @@ public:
 
 	MOCK_METHOD0(singletonResultTransport, ResultTransport::Ptr());
 
-	MOCK_METHOD2(newInfographic, Infographic::Ptr(const QFile &,
-					const Service &));
+	MOCK_METHOD1(newInfographic, Infographic::Ptr(const QFile &));
 
 	MOCK_METHOD1(newSourceDirectory, SourceDirectory::Ptr(const QDir &));
 };
-
 
 class MockExecutor: public Executor {
 public:
 
 	MOCK_METHOD2(execute, QByteArray(const QString &,
-			const QStringList &));
+					const QStringList &));
+};
+
+class MockInfographic: public Infographic {
+public:
+
+	MOCK_CONST_METHOD0(isValid, bool());
+
+	MOCK_CONST_METHOD0(type, Infographic::Type());
+
+	MOCK_METHOD2(sourcesChanged, void(const QMultiMap<QString, QString> &,
+					const QMultiMap<QString, QString> &));
+};
+
+class MockFileUtils: public FileUtils {
+public:
+
+	MOCK_METHOD2(listDirectory, QSet<QString>(const QDir &,
+					QDir::Filters));
 };
 
 class MockResultTransport: public ResultTransport {
 public:
+
+	MOCK_METHOD0(clear, void());
 
 	MOCK_METHOD3(send, void(const QString &, const QStringList &,
 					const QByteArray &));

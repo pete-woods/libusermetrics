@@ -1,6 +1,7 @@
 
 set(
 	USERMETRICSSERVICE_UNIT_TESTS_SRC
+	TestServiceImpl.cpp
 	TestInfographicImpl.cpp
 )
 

@@ -87,7 +87,7 @@ bool InfographicImpl::isValid() const {
 	return QFile::exists(m_exec) && m_type != Type::INVALID;
 }
 
-Infographic::Type InfographicImpl::type() {
+Infographic::Type InfographicImpl::type() const {
 	return m_type;
 }
 

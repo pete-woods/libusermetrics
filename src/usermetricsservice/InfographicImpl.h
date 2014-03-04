@@ -41,7 +41,7 @@ public:
 
 	bool isValid() const;
 
-	Type type();
+	Type type() const;
 
 	void sourcesChanged(const QMultiMap<QString, QString> &changedSources,
 			const QMultiMap<QString, QString> &allSources);

@@ -35,8 +35,7 @@ Q_OBJECT
 
 public:
 	ServiceImpl(const QDir &cacheDirectory, const QDir &packageInfographics,
-			FileUtils::Ptr fileUtils,
-			QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
+			FileUtils::Ptr fileUtils, ResultTransport::Ptr resultTransport,
 			Factory &factory);
 
 	virtual ~ServiceImpl();
@@ -57,7 +56,7 @@ protected:
 
 	FileUtils::Ptr m_fileUtils;
 
-	QSharedPointer<ComCanonicalInfographicsInterface> m_infographicService;
+	ResultTransport::Ptr m_resultTransport;
 
 	Factory &m_factory;
 

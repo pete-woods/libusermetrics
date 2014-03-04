@@ -15,8 +15,10 @@ add_definitions(-DUSERMETRICSSERVICE_BINARY="${SOURCE_BINARY_DIR}/usermetricsser
 add_definitions(-DTEST_LOCALEDIR="${CMAKE_CURRENT_BINARY_DIR}/data")
 add_definitions(-DTEST_DATADIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
-add_definitions(-DTEST_AGGREGATE_INFOGRAPHIC="${CMAKE_CURRENT_SOURCE_DIR}/data/infographics/test-aggregate.json")
-add_definitions(-DTEST_ITERATE_INFOGRAPHIC="${CMAKE_CURRENT_SOURCE_DIR}/data/infographics/test-iterate.json")
+set(TEST_INFOGRAPHICS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/data/infographics")
+add_definitions(-DTEST_INFOGRAPHICS_DIR="${TEST_INFOGRAPHICS_DIR}")
+add_definitions(-DTEST_AGGREGATE_INFOGRAPHIC="${TEST_INFOGRAPHICS_DIR}/test-aggregate.json")
+add_definitions(-DTEST_ITERATE_INFOGRAPHIC="${TEST_INFOGRAPHICS_DIR}/test-iterate.json")
 
 add_definitions(-DDATA_DIR="${DATA_DIR}")
 

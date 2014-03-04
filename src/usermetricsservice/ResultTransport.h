@@ -34,6 +34,8 @@ public:
 
 	virtual ~ResultTransport();
 
+	virtual void clear() = 0;
+
 	virtual void send(const QString &id, const QStringList &arguments,
 			const QByteArray &ba) = 0;
 };

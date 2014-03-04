@@ -31,6 +31,10 @@ ResultTransportImpl::ResultTransportImpl(
 ResultTransportImpl::~ResultTransportImpl() {
 }
 
+void ResultTransportImpl::clear() {
+	m_infographicService->clear().waitForFinished();
+}
+
 void ResultTransportImpl::send(const QString &id, const QStringList &arguments,
 		const QByteArray &ba) {
 	QFile fifo;

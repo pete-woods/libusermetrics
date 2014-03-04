@@ -31,6 +31,8 @@ public:
 
 	virtual ~ResultTransportImpl();
 
+	void clear();
+
 	void send(const QString &id, const QStringList &arguments,
 			const QByteArray &ba);
 

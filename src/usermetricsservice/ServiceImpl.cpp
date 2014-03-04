@@ -27,10 +27,9 @@ using namespace std;
 
 ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
 		const QDir &packageInfographics, FileUtils::Ptr fileUtils,
-		QSharedPointer<ComCanonicalInfographicsInterface> infographicService,
-		Factory &factory) :
-		m_cacheDirectory(cacheDirectory), m_fileUtils(fileUtils), m_infographicService(
-				infographicService), m_factory(factory) {
+		ResultTransport::Ptr resultTransport, Factory &factory) :
+		m_cacheDirectory(cacheDirectory), m_fileUtils(fileUtils), m_resultTransport(
+				resultTransport), m_factory(factory) {
 	QDir usermetricsDirectory(cacheDirectory.filePath("usermetrics"));
 
 	if (!usermetricsDirectory.mkpath("infographics")) {
@@ -48,9 +47,9 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
 	m_timer.setSingleShot(true);
 
 	connect(&m_infographicWatcher, &QFileSystemWatcher::directoryChanged, this,
-			&ServiceImpl::updateInfographicList);
+	&ServiceImpl::updateInfographicList);
 	connect(&m_sourcesWatcher, &QFileSystemWatcher::directoryChanged, this,
-			&ServiceImpl::updateSourcesList);
+	&ServiceImpl::updateSourcesList);
 
 	connect(&m_timer, &QTimer::timeout, this, &ServiceImpl::flushQueue);
 
@@ -60,7 +59,8 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
 	m_infographicWatcher.addPaths(m_infographicDirectories);
 	m_sourcesWatcher.addPath(m_sourcesDirectory.path());
 
-	m_infographicService->clear().waitForFinished();
+
+	m_resultTransport->clear();
 
 	QMultiMap<QString, QString> sources(allSources());
 	sourcesChanged(sources, sources);
@@ -96,7 +96,7 @@ void ServiceImpl::updateInfographicList() {
 
 void ServiceImpl::updateSourcesList() {
 	QSet<QString> fullNames(
-			m_fileUtils->listDirectory(m_sourcesDirectory, QDir::Dirs));
+			m_fileUtils->listDirectory(m_sourcesDirectory, QDir::Files));
 
 	QSet<QString> names;
 	for (const QString &name : fullNames) {
@@ -128,7 +128,7 @@ void ServiceImpl::updateSourcesList() {
 void ServiceImpl::sourceChanged(const QDir &directory,
 		const QString &fileName) {
 	QFileInfo directoryInfo(directory.path());
-	QString applicationId(directoryInfo.fileName());
+	QString applicationId(directoryInfo.dir().dirName());
 	m_fileUtils->shortApplicationId(applicationId);
 
 	if (m_changedSources.constFind(applicationId, fileName)
@@ -146,7 +146,7 @@ QMultiMap<QString, QString> ServiceImpl::allSources() {
 		iter.next();
 
 		QFileInfo directoryInfo(iter.key());
-		QString applicationId(directoryInfo.fileName());
+		QString applicationId(directoryInfo.dir().dirName());
 		m_fileUtils->shortApplicationId(applicationId);
 
 		for (const QString &filePath : iter.value()->files()) {
