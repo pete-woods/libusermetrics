@@ -24,13 +24,12 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonParseError>
-#include <QRegularExpression>
 #include <QTemporaryFile>
 
 using namespace UserMetricsService;
 
 InfographicImpl::InfographicImpl(const QFile &path, Executor::Ptr executor,
-		ResultTransport::Ptr resultTransport, const Service &service) :
+		ResultTransport::Ptr resultTransport) :
 		m_path(path.fileName()), m_executor(executor), m_resultTransport(
 				resultTransport), m_type(Type::INVALID), m_ruleCount(0) {
 
@@ -73,13 +72,11 @@ InfographicImpl::InfographicImpl(const QFile &path, Executor::Ptr executor,
 	while (i.hasNext()) {
 		i.next();
 		QStringList rules(i.value().toStringList());
-		m_rules[i.key()] = rules;
+		auto list = m_rules.insert(i.key(), QList<QRegularExpression>());
+		for (const QString &rule : rules) {
+			*list << QRegularExpression(rule);
+		}
 		m_ruleCount += rules.size();
-	}
-
-	if (isValid()) {
-		connect(&service, &Service::sourcesChanged, this,
-				&Infographic::sourcesChanged);
 	}
 }
 
@@ -88,6 +85,10 @@ InfographicImpl::~InfographicImpl() {
 
 bool InfographicImpl::isValid() const {
 	return QFile::exists(m_exec) && m_type != Type::INVALID;
+}
+
+Infographic::Type InfographicImpl::type() {
+	return m_type;
 }
 
 void InfographicImpl::sourcesChanged(
@@ -110,7 +111,7 @@ QStringList InfographicImpl::match(
 
 	QStringList output;
 
-	QMapIterator<QString, QStringList> iter(m_rules);
+	QMapIterator<QString, QList<QRegularExpression>> iter(m_rules);
 	while (iter.hasNext()) {
 		iter.next();
 		const QString& sourceName(iter.key());
@@ -121,12 +122,11 @@ QStringList InfographicImpl::match(
 			changedFiles = changedSources.values(sourceName);
 		}
 
-		const QStringList& watchedFiles(iter.value());
-		for (const QString& changedFile : changedFiles) {
-			QString changedFileName(QFileInfo(changedFile).fileName());
-			for (const QString& watchedFile : watchedFiles) {
-				QRegularExpression re(watchedFile);
-				if (re.match(changedFileName).hasMatch()) {
+		const QList<QRegularExpression> &watchedFiles(iter.value());
+		for (const QRegularExpression &watchedFile : watchedFiles) {
+			for (const QString &changedFile : changedFiles) {
+				QString changedFileName(QFileInfo(changedFile).fileName());
+				if (watchedFile.match(changedFileName).hasMatch()) {
 					output << changedFile;
 				}
 			}

@@ -16,6 +16,7 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
+#include <libusermetricscommon/DBusPaths.h>
 #include <usermetricsservice/Factory.h>
 #include <usermetricsservice/InfographicImpl.h>
 #include <usermetricsservice/QProcessExecutor.h>
@@ -23,6 +24,7 @@
 #include <usermetricsservice/SourceDirectoryImpl.h>
 #include <usermetricsservice/ServiceImpl.h>
 
+using namespace UserMetricsCommon;
 using namespace UserMetricsService;
 
 Factory::Factory() {
@@ -51,9 +53,8 @@ FileUtils::Ptr Factory::singletonFileUtils() {
 
 Executor::Ptr Factory::singletonExecutor() {
 	if (!m_executor) {
-		m_executor.reset(
-				new QProcessExecutor(QDir::home().filePath(".cache"),
-						AA_EXEC_PATH));
+		m_executor.reset(new QProcessExecutor(QDir::home().filePath(".cache"),
+		AA_EXEC_PATH));
 	}
 	return m_executor;
 }
@@ -62,8 +63,8 @@ QSharedPointer<ComCanonicalInfographicsInterface> Factory::singletonInfographicS
 	if (!m_infographicService) {
 		m_infographicService.reset(
 				new ComCanonicalInfographicsInterface(
-						"com.canonical.Infographics",
-						"/com/canonical/Infographics",
+						DBusPaths::INFOGRAPHIC_DBUS_NAME,
+						DBusPaths::INFOGRAPHIC_DBUS_PATH,
 						QDBusConnection::systemBus()));
 	}
 	return m_infographicService;
@@ -77,11 +78,10 @@ ResultTransport::Ptr Factory::singletonResultTransport() {
 	return m_resultTransport;
 }
 
-Infographic::Ptr Factory::newInfographic(const QFile &path,
-		const Service &service) {
+Infographic::Ptr Factory::newInfographic(const QFile &path) {
 	return Infographic::Ptr(
 			new InfographicImpl(path, singletonExecutor(),
-					singletonResultTransport(), service));
+					singletonResultTransport()));
 }
 
 SourceDirectory::Ptr Factory::newSourceDirectory(const QDir &path) {

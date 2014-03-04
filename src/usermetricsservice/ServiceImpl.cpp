@@ -85,7 +85,12 @@ void ServiceImpl::updateInfographicList() {
 	// Work out the names we need to add
 	names.subtract(m_infographics.keys().toSet());
 	for (const QString &name : names) {
-		m_infographics.insert(name, m_factory.newInfographic(name, *this));
+		Infographic::Ptr infographic(m_factory.newInfographic(name));
+		m_infographics.insert(name, infographic);
+		if (infographic->isValid()) {
+			connect(this, &Service::sourcesChanged, infographic.data(),
+					&Infographic::sourcesChanged);
+		}
 	}
 }
 

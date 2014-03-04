@@ -15,6 +15,9 @@ add_definitions(-DUSERMETRICSSERVICE_BINARY="${SOURCE_BINARY_DIR}/usermetricsser
 add_definitions(-DTEST_LOCALEDIR="${CMAKE_CURRENT_BINARY_DIR}/data")
 add_definitions(-DTEST_DATADIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
+add_definitions(-DTEST_AGGREGATE_INFOGRAPHIC="${CMAKE_CURRENT_SOURCE_DIR}/data/infographics/test-aggregate.json")
+add_definitions(-DTEST_ITERATE_INFOGRAPHIC="${CMAKE_CURRENT_SOURCE_DIR}/data/infographics/test-iterate.json")
+
 add_definitions(-DDATA_DIR="${DATA_DIR}")
 
 add_subdirectory(data)

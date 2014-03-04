@@ -39,6 +39,8 @@ public:
 
 	virtual bool isValid() const = 0;
 
+	virtual Type type() = 0;
+
 public Q_SLOTS:
 	virtual void sourcesChanged(
 			const QMultiMap<QString, QString> &changedSources,

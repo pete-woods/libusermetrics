@@ -18,8 +18,7 @@
 
 #include <stdexcept>
 
-#include <usermetricsservice/Authentication.h>
-#include <usermetricsservice/DBusUserMetrics.h>
+z#include <usermetricsservice/DBusUserMetrics.h>
 #include <usermetricsservice/DBusDataSource.h>
 #include <usermetricsservice/DBusUserData.h>
 #include <usermetricsservice/DBusDataSet.h>

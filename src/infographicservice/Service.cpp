@@ -7,29 +7,31 @@
 
 #include <infographicservice/InfographicServiceAdaptor.h>
 #include <infographicservice/Service.h>
+#include <libusermetricscommon/DBusPaths.h>
 
 #include <QFile>
 #include <pwd.h>
 
 using namespace InfographicService;
+using namespace UserMetricsCommon;
 
 Service::Service(const QDir &directory, const QDBusConnection &systemConnection) :
 		m_directory(directory), m_connection(systemConnection), m_adaptor(
 				new InfographicsAdaptor(this)), m_hash(QCryptographicHash::Sha1) {
 
-	if (!m_connection.registerObject("/com/canonical/Infographics", this)) {
+	if (!m_connection.registerObject(DBusPaths::INFOGRAPHIC_DBUS_PATH, this)) {
 		throw std::logic_error(
 				"Unable to register Infographics object on DBus");
 	}
-	if (!m_connection.registerService("com.canonical.Infographics")) {
+	if (!m_connection.registerService(DBusPaths::INFOGRAPHIC_DBUS_NAME)) {
 		throw std::logic_error(
 				"Unable to register Infographics service on DBus");
 	}
 }
 
 Service::~Service() {
-	m_connection.unregisterService("com.canonical.Infographics");
-	m_connection.unregisterObject("/com/canonical/Infographics");
+	m_connection.unregisterService(DBusPaths::INFOGRAPHIC_DBUS_NAME);
+	m_connection.unregisterObject(DBusPaths::INFOGRAPHIC_DBUS_PATH);
 }
 
 unsigned int Service::uid() {

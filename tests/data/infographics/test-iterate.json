@@ -1,0 +1,9 @@
+{
+    "exec": "/bin/echo",
+    "type": "iterate",
+    "input": {
+        "*": [
+            ".*.libusermetrics.json"
+        ]
+    }
+}

@@ -25,22 +25,23 @@
 
 #include <QFile>
 #include <QMap>
+#include <QRegularExpression>
 #include <QString>
 #include <QStringList>
 #include <QVariant>
 
 namespace UserMetricsService {
 
-class Service;
-
 class InfographicImpl: public Infographic {
 public:
 	InfographicImpl(const QFile &path, Executor::Ptr executor,
-			ResultTransport::Ptr resultTransport, const Service &service);
+			ResultTransport::Ptr resultTransport);
 
 	virtual ~InfographicImpl();
 
 	bool isValid() const;
+
+	Type type();
 
 	void sourcesChanged(const QMultiMap<QString, QString> &changedSources,
 			const QMultiMap<QString, QString> &allSources);
@@ -65,7 +66,7 @@ protected:
 
 	Type m_type;
 
-	QMap<QString, QStringList> m_rules;
+	QMap<QString, QList<QRegularExpression>> m_rules;
 
 	int m_ruleCount;
 
