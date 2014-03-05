@@ -2,7 +2,6 @@
 set(USERMETRICSSERVICE_SOURCES
 	Executor.cpp
 	Factory.cpp
-	FileUtils.cpp
 	Infographic.cpp
 	InfographicImpl.cpp
 	QProcessExecutor.cpp

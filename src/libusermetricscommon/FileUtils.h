@@ -16,15 +16,15 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#ifndef USERMETRICSSERVICE_FILEUTILS_H_
-#define USERMETRICSSERVICE_FILEUTILS_H_
+#ifndef USERMETRICSCOMMON_FILEUTILS_H_
+#define USERMETRICSCOMMON_FILEUTILS_H_
 
 #include <QDir>
 #include <QSet>
 #include <QSharedPointer>
 #include <QString>
 
-namespace UserMetricsService {
+namespace UserMetricsCommon {
 
 class FileUtils {
 public:
@@ -42,4 +42,4 @@ public:
 
 }
 
-#endif /* USERMETRICSSERVICE_FILEUTILS_H_ */
+#endif /* USERMETRICSCOMMON_FILEUTILS_H_ */

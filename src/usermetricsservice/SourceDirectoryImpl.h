@@ -19,7 +19,7 @@
 #ifndef USERMETRICSSERVICE_SOURCEDIRECTORYIMPL_H_
 #define USERMETRICSSERVICE_SOURCEDIRECTORYIMPL_H_
 
-#include <usermetricsservice/FileUtils.h>
+#include <libusermetricscommon/FileUtils.h>
 #include <usermetricsservice/SourceDirectory.h>
 
 #include <QDir>
@@ -32,7 +32,8 @@ class SourceDirectoryImpl: public SourceDirectory {
 Q_OBJECT
 
 public:
-	SourceDirectoryImpl(const QDir &path, FileUtils::Ptr fileUtils);
+	SourceDirectoryImpl(const QDir &path,
+			UserMetricsCommon::FileUtils::Ptr fileUtils);
 
 	virtual ~SourceDirectoryImpl();
 
@@ -46,7 +47,7 @@ protected Q_SLOTS:
 protected:
 	QDir m_path;
 
-	FileUtils::Ptr m_fileUtils;
+	UserMetricsCommon::FileUtils::Ptr m_fileUtils;
 
 	QFileSystemWatcher m_watcher;
 };

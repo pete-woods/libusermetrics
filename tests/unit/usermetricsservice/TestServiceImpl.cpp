@@ -29,6 +29,7 @@
 
 using namespace std;
 using namespace testing;
+using namespace UserMetricsCommon;
 using namespace UserMetricsService;
 using namespace UserMetricsService::Mocks;
 

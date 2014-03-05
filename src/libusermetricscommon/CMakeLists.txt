@@ -2,6 +2,7 @@
 set(USERMETRICS_COMMON_SOURCES
 	DateFactory.cpp
 	DateFactoryImpl.cpp
+	FileUtils.cpp
 	Localisation.cpp
 )
 

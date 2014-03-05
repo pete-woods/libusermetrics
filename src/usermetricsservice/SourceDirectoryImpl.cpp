@@ -20,6 +20,7 @@
 
 #include <QDebug>
 
+using namespace UserMetricsCommon;
 using namespace UserMetricsService;
 
 SourceDirectoryImpl::SourceDirectoryImpl(const QDir &path,

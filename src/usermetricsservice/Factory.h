@@ -19,9 +19,9 @@
 #ifndef USERMETRICSSERVICE_FACTORY_H_
 #define USERMETRICSSERVICE_FACTORY_H_
 
+#include <libusermetricscommon/FileUtils.h>
 #include <libusermetricscommon/InfographicsInterface.h>
 #include <usermetricsservice/Executor.h>
-#include <usermetricsservice/FileUtils.h>
 #include <usermetricsservice/Infographic.h>
 #include <usermetricsservice/ResultTransport.h>
 #include <usermetricsservice/Service.h>
@@ -40,7 +40,7 @@ public:
 
 	virtual Service::Ptr singletonService();
 
-	virtual FileUtils::Ptr singletonFileUtils();
+	virtual UserMetricsCommon::FileUtils::Ptr singletonFileUtils();
 
 	virtual Executor::Ptr singletonExecutor();
 
@@ -55,7 +55,7 @@ public:
 protected:
 	Service::Ptr m_service;
 
-	FileUtils::Ptr m_fileUtils;
+	UserMetricsCommon::FileUtils::Ptr m_fileUtils;
 
 	Executor::Ptr m_executor;
 

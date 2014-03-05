@@ -35,8 +35,8 @@ Q_OBJECT
 
 public:
 	ServiceImpl(const QDir &cacheDirectory, const QDir &packageInfographics,
-			FileUtils::Ptr fileUtils, ResultTransport::Ptr resultTransport,
-			Factory &factory);
+			UserMetricsCommon::FileUtils::Ptr fileUtils,
+			ResultTransport::Ptr resultTransport, Factory &factory);
 
 	virtual ~ServiceImpl();
 
@@ -54,7 +54,7 @@ protected Q_SLOTS:
 protected:
 	QDir m_cacheDirectory;
 
-	FileUtils::Ptr m_fileUtils;
+	UserMetricsCommon::FileUtils::Ptr m_fileUtils;
 
 	ResultTransport::Ptr m_resultTransport;
 

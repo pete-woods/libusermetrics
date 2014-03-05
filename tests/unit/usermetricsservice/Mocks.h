@@ -31,7 +31,7 @@ public:
 
 	MOCK_METHOD0(singletonService, Service::Ptr());
 
-	MOCK_METHOD0(singletonFileUtils, FileUtils::Ptr());
+	MOCK_METHOD0(singletonFileUtils, UserMetricsCommon::FileUtils::Ptr());
 
 	MOCK_METHOD0(singletonExecutor, Executor::Ptr());
 
@@ -62,7 +62,7 @@ public:
 					const QMultiMap<QString, QString> &));
 };
 
-class MockFileUtils: public FileUtils {
+class MockFileUtils: public UserMetricsCommon::FileUtils {
 public:
 
 	MOCK_METHOD2(listDirectory, QSet<QString>(const QDir &,

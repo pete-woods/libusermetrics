@@ -22,6 +22,7 @@
 #include <QStringList>
 #include <stdexcept>
 
+using namespace UserMetricsCommon;
 using namespace UserMetricsService;
 using namespace std;
 

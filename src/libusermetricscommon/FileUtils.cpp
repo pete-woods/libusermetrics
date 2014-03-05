@@ -16,11 +16,11 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
-#include <usermetricsservice/FileUtils.h>
+#include <libusermetricscommon/FileUtils.h>
 
 #include <QRegularExpression>
 
-using namespace UserMetricsService;
+using namespace UserMetricsCommon;
 
 static QRegularExpression CLICK_REGEX(
 		"^[a-z0-9][a-z0-9+.-]+_[a-zA-Z0-9+.-]+_[0-9][a-zA-Z0-9.+:~-]*$");
