@@ -5,6 +5,7 @@ set(
 	TestColorThemeImpl.cpp
 	TestDataSet.cpp
 	TestGSettingsColorThemeProvider.cpp
+	TestInfographicListImpl.cpp
 	TestQVariantListModel.cpp
 	TestUserMetricsImpl.cpp
 )

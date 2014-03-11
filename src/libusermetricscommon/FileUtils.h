@@ -22,7 +22,7 @@
 #include <QDir>
 #include <QSet>
 #include <QSharedPointer>
-#include <QString>
+#include <QStringList>
 
 namespace UserMetricsCommon {
 
@@ -36,6 +36,9 @@ public:
 
 	virtual QSet<QString> listDirectory(const QDir &directory,
 			QDir::Filters filters);
+
+	virtual QSet<QString> listDirectory(const QStringList &nameFilters,
+			const QDir &directory, QDir::Filters filters);
 
 	void shortApplicationId(QString &applicationId);
 };
