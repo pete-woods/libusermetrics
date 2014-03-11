@@ -11,6 +11,7 @@
 
 #include <QFile>
 #include <pwd.h>
+#include <cstdio>
 
 using namespace InfographicService;
 using namespace UserMetricsCommon;
@@ -18,6 +19,10 @@ using namespace UserMetricsCommon;
 Service::Service(const QDir &directory, const QDBusConnection &systemConnection) :
 		m_directory(directory), m_connection(systemConnection), m_adaptor(
 				new InfographicsAdaptor(this)), m_hash(QCryptographicHash::Sha1) {
+
+	m_directory.mkpath("tmp");
+	m_tempFile.setFileName(
+			QDir(m_directory.filePath("tmp")).filePath("tmp.svg"));
 
 	if (!m_connection.registerObject(DBusPaths::INFOGRAPHIC_DBUS_PATH, this)) {
 		throw std::logic_error(
@@ -63,7 +68,7 @@ void Service::update(const QString &visualizer, const QStringList &sources,
 
 	QDir usersDirectory(userDirectory());
 	QDir infographicDirectory(usersDirectory.filePath(visualizer));
-	QFile destination(infographicDirectory.filePath(destinationName));
+	QString destination(infographicDirectory.filePath(destinationName));
 
 	QFile file(filePath);
 	QByteArray ba;
@@ -80,10 +85,17 @@ void Service::update(const QString &visualizer, const QStringList &sources,
 	}
 
 	usersDirectory.mkpath(visualizer);
-	if (destination.open(QIODevice::WriteOnly)) {
-		destination.write(ba);
-		destination.close();
+	if (m_tempFile.open(QIODevice::WriteOnly)) {
+		m_tempFile.write(ba);
+		m_tempFile.close();
 	} else {
-		qWarning() << "Failed to write file" << destination.fileName();
+		qWarning() << "Failed to write file" << m_tempFile.fileName();
+	}
+
+	int result = std::rename(m_tempFile.fileName().toUtf8().constData(),
+				destination.toUtf8().constData());
+	if (result == -1) {
+		qWarning() << "Failed to move result" << m_tempFile.fileName() << "to destination"
+				<< destination;
 	}
 }

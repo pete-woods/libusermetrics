@@ -51,6 +51,8 @@ protected:
 
 	QDir m_directory;
 
+	QFile m_tempFile;
+
 	QDBusConnection m_connection;
 
 	QSharedPointer<InfographicsAdaptor> m_adaptor;

@@ -17,6 +17,7 @@
  */
 
 #include <stdexcept>
+#include <cstdio>
 
 #include <libusermetricscommon/Localisation.h>
 #include <libusermetricsinput/MetricImpl.h>
@@ -183,7 +184,13 @@ void MetricImpl::scaleData() {
 }
 
 QString MetricImpl::buildJsonFile() {
-	return m_metricDirectory.filePath(m_parameters.id() + ".libusermetrics.json");
+	return m_metricDirectory.filePath(
+			m_parameters.id() + ".libusermetrics.json");
+}
+
+QString MetricImpl::buildTmpFile() {
+	return QDir(m_metricDirectory.filePath(".tmp")).filePath(
+			"." + m_parameters.id() + ".libusermetrics.json");
 }
 
 void MetricImpl::loadData() {
@@ -241,11 +248,21 @@ void MetricImpl::writeData() {
 
 	QJsonDocument document(QJsonDocument::fromVariant(root));
 
-	QFile jsonFile(buildJsonFile());
-	if (jsonFile.open(QIODevice::WriteOnly)) {
-		jsonFile.write(document.toJson());
-		jsonFile.close();
+	m_metricDirectory.mkpath(".tmp");
+	QFile tmpFile(buildTmpFile());
+	if (tmpFile.open(QIODevice::WriteOnly)) {
+		tmpFile.write(document.toJson());
+		tmpFile.close();
 	} else {
-		qWarning() << "Could not write usermetrics file" << jsonFile.fileName();
+		qWarning() << "Could not write usermetrics file" << tmpFile.fileName();
+		return;
+	}
+
+	QString jsonFile(buildJsonFile());
+	int result = std::rename(tmpFile.fileName().toUtf8().constData(),
+			jsonFile.toUtf8().constData());
+	if (result == -1) {
+		qWarning() << "Failed to move result" << tmpFile.fileName()
+				<< "to destination" << jsonFile;
 	}
 }
