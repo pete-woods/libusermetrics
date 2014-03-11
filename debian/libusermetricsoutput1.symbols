@@ -34,11 +34,24 @@ libusermetricsoutput.so.1 libusermetricsoutput1 #MINVER#
  (c++)"UserMetricsOutput::UserMetrics::~UserMetrics()@Base" 1.0.1
  (c++)"UserMetricsOutput::UserMetrics::~UserMetrics()@Base" 1.0.1
  (c++)"UserMetricsOutput::UserMetrics::~UserMetrics()@Base" 1.0.1
+ (c++)"UserMetricsOutput::InfographicList::uidChanged(unsigned int)@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::getInstance()@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::qt_metacall(QMetaObject::Call, int, void**)@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::qt_metacast(char const*)@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::filesUpdated(QStringList)@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::staticMetaObject@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::infographicsChanged(QAbstractItemModel*)@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::InfographicList(QObject*)@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::~InfographicList()@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::metaObject() const@Base" 0replaceme
  (c++)"UserMetricsOutput::ColorTheme::metaObject() const@Base" 1.0.1
  (c++)"UserMetricsOutput::UserMetrics::metaObject() const@Base" 1.0.1
  (c++)"typeinfo for UserMetricsOutput::ColorTheme@Base" 1.0.1
  (c++)"typeinfo for UserMetricsOutput::UserMetrics@Base" 1.0.1
  (c++)"typeinfo name for UserMetricsOutput::ColorTheme@Base" 1.0.1
  (c++)"typeinfo name for UserMetricsOutput::UserMetrics@Base" 1.0.1
+ (c++)"typeinfo for UserMetricsOutput::InfographicList@Base" 0replaceme
+ (c++)"typeinfo name for UserMetricsOutput::InfographicList@Base" 0replaceme
  (c++)"vtable for UserMetricsOutput::ColorTheme@Base" 1.0.1
+ (c++)"vtable for UserMetricsOutput::InfographicList@Base" 0replaceme
  (c++)"vtable for UserMetricsOutput::UserMetrics@Base" 1.0.1
