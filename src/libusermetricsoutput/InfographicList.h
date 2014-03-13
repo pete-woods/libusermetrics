@@ -19,8 +19,8 @@
 #ifndef USERMETRICSOUTPUT_INFOGRAPHICLIST_H_
 #define USERMETRICSOUTPUT_INFOGRAPHICLIST_H_
 
-#include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
+#include <QtCore/QStringListModel>
 
 /**
  * @{
@@ -40,18 +40,13 @@ namespace UserMetricsOutput {
  * Given a user ID, this class watches the corresponding
  *
  **/
-class Q_DECL_EXPORT InfographicList: public QObject {
+class Q_DECL_EXPORT InfographicList: public QStringListModel {
 Q_OBJECT
 
 /**
  * @brief The current username selected.
  */
 Q_PROPERTY(unsigned int uid READ uid WRITE setUid NOTIFY uidChanged FINAL)
-
-/**
- * @brief The data for the first month.
- */
-Q_PROPERTY(const QAbstractItemModel *infographics READ infographics NOTIFY infographicsChanged FINAL)
 
 public:
 	/**
@@ -70,11 +65,6 @@ public:
 	virtual unsigned int uid() const = 0;
 
 
-	/**
-	 * @brief A list of paths to SVGs.
-	 */
-	virtual QAbstractItemModel *infographics() const = 0;
-
 Q_SIGNALS:
 	/**
 	 * @brief The user ID has changed
@@ -82,26 +72,6 @@ Q_SIGNALS:
 	 * @param uid
 	 */
 	void uidChanged(unsigned int uid);
-
-	/**
-	 * @brief The list of infographics has changed.
-	 *
-	 * @param infographics
-	 *
-	 * More fine-grained changed notification also occurs
-	 * using the QAbstractItemModel signals.
-	 */
-	void infographicsChanged(QAbstractItemModel *infographics);
-
-	/**
-	 * @brief Infographic files have been updated on disk
-	 *
-	 * @param files
-	 *
-	 * These files have been modified on disk and required
-	 * re-loading.
-	 */
-	void filesUpdated(QStringList files);
 
 public Q_SLOTS:
 	/**

@@ -48,9 +48,9 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
 	m_timer.setSingleShot(true);
 
 	connect(&m_infographicWatcher, &QFileSystemWatcher::directoryChanged, this,
-	&ServiceImpl::updateInfographicList);
+			&ServiceImpl::updateInfographicList);
 	connect(&m_sourcesWatcher, &QFileSystemWatcher::directoryChanged, this,
-	&ServiceImpl::updateSourcesList);
+			&ServiceImpl::updateSourcesList);
 
 	connect(&m_timer, &QTimer::timeout, this, &ServiceImpl::flushQueue);
 
@@ -59,7 +59,6 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
 
 	m_infographicWatcher.addPaths(m_infographicDirectories);
 	m_sourcesWatcher.addPath(m_sourcesDirectory.path());
-
 
 	m_resultTransport->clear();
 
@@ -74,7 +73,7 @@ void ServiceImpl::updateInfographicList() {
 	QSet<QString> names;
 
 	for (const QString &directory : m_infographicDirectories) {
-		names.unite(m_fileUtils->listDirectory(directory, QDir::Files));
+		names.unite(m_fileUtils->listDirectory(directory, QDir::Files).toSet());
 	}
 
 	// Remove deleted infographics
@@ -97,7 +96,7 @@ void ServiceImpl::updateInfographicList() {
 
 void ServiceImpl::updateSourcesList() {
 	QSet<QString> fullNames(
-			m_fileUtils->listDirectory(m_sourcesDirectory, QDir::Files));
+			m_fileUtils->listDirectory(m_sourcesDirectory, QDir::Files).toSet());
 
 	QSet<QString> names;
 	for (const QString &name : fullNames) {

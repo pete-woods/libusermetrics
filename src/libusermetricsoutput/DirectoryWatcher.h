@@ -45,13 +45,11 @@ public Q_SLOTS:
 	void start();
 
 Q_SIGNALS:
-	void fileChanged(const QString &file);
+	void directoryChanged(const QString &directory, const QStringList &files);
 
 	void directoryRemoved(const QString &directory);
 
 protected Q_SLOTS:
-	void internalFileChanged(const QString &path);
-
 	void internalDirectoryChanged();
 
 protected:

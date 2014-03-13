@@ -25,30 +25,12 @@
 using namespace UserMetricsCommon;
 using namespace UserMetricsOutput;
 
-namespace {
-
-static void trim(QSet<QString> &files, const QSet<QString> &directories) {
-	for (const QString &directory : directories) {
-		auto it(files.begin());
-		while (it != files.end()) {
-			if (it->startsWith(directory)) {
-				it = files.erase(it);
-			} else {
-				++it;
-			}
-		}
-	}
-}
-
-}
-
 InfographicListImpl::InfographicListImpl(const QString &path, QObject *parent) :
-		InfographicList(parent), m_path(path), m_uid(0), m_infographics(
-				new QStringListModel()) {
+		InfographicList(parent), m_path(path), m_uid(0) {
 
 	connect(&m_timer, &QTimer::timeout, this, &InfographicListImpl::timeout);
 	connect(&m_filesystemWatcher, &QFileSystemWatcher::directoryChanged, this,
-			&InfographicListImpl::directoryChanged);
+			&InfographicListImpl::internalDirectoryChanged);
 
 	m_timer.setSingleShot(true);
 	m_filesystemWatcher.addPath(path);
@@ -69,8 +51,8 @@ void InfographicListImpl::newDirectoryWatcher() {
 			new DirectoryWatcher(m_userDir, 1, FileUtils::Ptr(new FileUtils())),
 			&QObject::deleteLater);
 	m_directoryWatcher->moveToThread(&m_workerThread);
-	connect(m_directoryWatcher.data(), &DirectoryWatcher::fileChanged, this,
-			&InfographicListImpl::fileChanged);
+	connect(m_directoryWatcher.data(), &DirectoryWatcher::directoryChanged,
+			this, &InfographicListImpl::directoryContentsChanged);
 	connect(m_directoryWatcher.data(), &DirectoryWatcher::directoryRemoved,
 			this, &InfographicListImpl::directoryRemoved);
 	QTimer::singleShot(0, m_directoryWatcher.data(), SLOT(start()));
@@ -89,7 +71,7 @@ void InfographicListImpl::setUid(unsigned int uid) {
 	}
 }
 
-void InfographicListImpl::directoryChanged() {
+void InfographicListImpl::internalDirectoryChanged() {
 	if (m_uid == 0) {
 		return;
 	}
@@ -105,48 +87,53 @@ void InfographicListImpl::directoryChanged() {
 	}
 }
 
-void InfographicListImpl::fileChanged(const QString &name) {
-	m_changedFiles.insert(name);
+void InfographicListImpl::directoryContentsChanged(const QString &directory,
+		const QStringList &files) {
+	m_files.remove(directory);
+	for (const QString &file : files) {
+		m_files.insert(directory, file);
+	}
 	m_timer.start(100);
 }
 
 void InfographicListImpl::directoryRemoved(const QString &name) {
-	m_removedDirectories.insert(name);
-	trim(m_changedFiles, m_removedDirectories);
+	m_files.remove(name);
 	m_timer.start(100);
 }
 
 void InfographicListImpl::timeout() {
-	if(!m_directoryWatcher) {
+	if (!m_directoryWatcher) {
 		return;
 	}
 
-	trim(m_files, m_removedDirectories);
+	int existingRows(rowCount());
+	int newRows(m_files.count());
 
-	// There's no point giving updates for new SVGs, so
-	// this will be the set of files that we already know
-	// about, but has changed on disk.
-	QSet<QString> changed(m_changedFiles);
-	changed.intersect(m_files);
-
-	// Add changed files to known files
-	m_files.unite(m_changedFiles);
-
-	// Don't need these any more
-	m_removedDirectories.clear();
-	m_changedFiles.clear();
-
-	QSet<QString> currentFiles(m_infographics->stringList().toSet());
-	if (currentFiles != m_files) {
-		m_infographics->setStringList(m_files.toList());
+	// Special case the initial insert
+	if (existingRows == 0 && newRows > 0) {
+		setStringList(m_files.values());
+		return;
 	}
 
-	if (!changed.isEmpty()) {
-		filesUpdated(changed.toList());
+	if (newRows > existingRows) {
+		// insert new rows
+		insertRows(existingRows, newRows - existingRows);
+	} else if (newRows < existingRows) {
+		// remove extra rows
+		removeRows(newRows, existingRows - newRows);
 	}
-}
 
-QAbstractItemModel * InfographicListImpl::infographics() const {
-	return m_infographics.data();
+	int row(0);
+	QMapIterator<QString, QString> it(m_files);
+	while (it.hasNext()) {
+		it.next();
+		const QString &file(it.value());
+
+		QString existing(data(index(row, 0), Qt::DisplayRole).toString());
+		if (existing != file) {
+			setData(index(row, 0), file);
+		}
+		++row;
+	}
 }
 

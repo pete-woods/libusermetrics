@@ -38,9 +38,7 @@ libusermetricsoutput.so.1 libusermetricsoutput1 #MINVER#
  (c++)"UserMetricsOutput::InfographicList::getInstance()@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::qt_metacall(QMetaObject::Call, int, void**)@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::qt_metacast(char const*)@Base" 0replaceme
- (c++)"UserMetricsOutput::InfographicList::filesUpdated(QStringList)@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::staticMetaObject@Base" 0replaceme
- (c++)"UserMetricsOutput::InfographicList::infographicsChanged(QAbstractItemModel*)@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::InfographicList(QObject*)@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::~InfographicList()@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::metaObject() const@Base" 0replaceme

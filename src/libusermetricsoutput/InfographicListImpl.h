@@ -25,10 +25,10 @@
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QMultiMap>
 #include <QtCore/QThread>
 #include <QtCore/QTimer>
 #include <QtCore/QScopedPointer>
-#include <QtCore/QStringListModel>
 
 namespace UserMetricsOutput {
 
@@ -42,14 +42,13 @@ public:
 
 	unsigned int uid() const override;
 
-	QAbstractItemModel *infographics() const override;
-
 	void setUid(unsigned int uid) override;
 
 protected Q_SLOTS:
-	void directoryChanged();
+	void internalDirectoryChanged();
 
-	void fileChanged(const QString &name);
+	void directoryContentsChanged(const QString &directory,
+			const QStringList &files);
 
 	void directoryRemoved(const QString &directory);
 
@@ -68,17 +67,11 @@ protected:
 
 	unsigned int m_uid;
 
-	QScopedPointer<QStringListModel> m_infographics;
-
 	QFileSystemWatcher m_filesystemWatcher;
 
 	DirectoryWatcher::Ptr m_directoryWatcher;
 
-	QSet<QString> m_changedFiles;
-
-	QSet<QString> m_removedDirectories;
-
-	QSet<QString> m_files;
+	QMultiMap<QString, QString> m_files;
 };
 
 }

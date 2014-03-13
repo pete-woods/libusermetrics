@@ -34,11 +34,8 @@ public:
 
 	virtual ~FileUtils();
 
-	virtual QSet<QString> listDirectory(const QDir &directory,
-			QDir::Filters filters);
-
-	virtual QSet<QString> listDirectory(const QStringList &nameFilters,
-			const QDir &directory, QDir::Filters filters);
+	virtual QStringList listDirectory(const QDir &directory,
+			QDir::Filters filters, QDir::SortFlags sort = QDir::NoSort);
 
 	void shortApplicationId(QString &applicationId);
 };

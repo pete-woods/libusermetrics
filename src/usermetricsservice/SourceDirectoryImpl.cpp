@@ -51,7 +51,8 @@ void SourceDirectoryImpl::fileChanged(const QString &path) {
 }
 
 void SourceDirectoryImpl::updateFileList() {
-	QSet<QString> names(m_fileUtils->listDirectory(m_path, QDir::Files));
+	QSet<QString> names(
+			m_fileUtils->listDirectory(m_path, QDir::Files).toSet());
 
 	// Remove deleted files
 	QSet<QString> toRemove(m_watcher.files().toSet().subtract(names));

@@ -9,8 +9,8 @@
 #include <infographicservice/Service.h>
 #include <libusermetricscommon/DBusPaths.h>
 
+#include <QDateTime>
 #include <QFile>
-#include <pwd.h>
 #include <cstdio>
 
 using namespace InfographicService;
@@ -19,6 +19,10 @@ using namespace UserMetricsCommon;
 Service::Service(const QDir &directory, const QDBusConnection &systemConnection) :
 		m_directory(directory), m_connection(systemConnection), m_adaptor(
 				new InfographicsAdaptor(this)), m_hash(QCryptographicHash::Sha1) {
+
+	m_dirtyTimer.setSingleShot(true);
+	m_dirtyTimer.setTimerType(Qt::VeryCoarseTimer);
+	connect(&m_dirtyTimer, &QTimer::timeout, this, &Service::timeout);
 
 	m_directory.mkpath("tmp");
 	m_tempFile.setFileName(
@@ -63,12 +67,15 @@ void Service::update(const QString &visualizer, const QStringList &sources,
 	for (const QString &source : sources) {
 		m_hash.addData(source.toUtf8());
 	}
-	QString destinationName(m_hash.result().toHex());
-	destinationName.append(".svg");
+
+	QString sha(m_hash.result().toHex());
 
 	QDir usersDirectory(userDirectory());
 	QDir infographicDirectory(usersDirectory.filePath(visualizer));
-	QString destination(infographicDirectory.filePath(destinationName));
+	QString destination(infographicDirectory.filePath(sha));
+	destination.append("-");
+	destination.append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+	destination.append(".svg");
 
 	QFile file(filePath);
 	QByteArray ba;
@@ -93,9 +100,32 @@ void Service::update(const QString &visualizer, const QStringList &sources,
 	}
 
 	int result = std::rename(m_tempFile.fileName().toUtf8().constData(),
-				destination.toUtf8().constData());
+			destination.toUtf8().constData());
 	if (result == -1) {
-		qWarning() << "Failed to move result" << m_tempFile.fileName() << "to destination"
-				<< destination;
+		qWarning() << "Failed to move result" << m_tempFile.fileName()
+				<< "to destination" << destination;
+		return;
 	}
+
+	// clean up in one minute
+	m_dirty << qMakePair(infographicDirectory.path(), sha + "-*.svg");
+	m_dirtyTimer.start(60000);
+}
+
+void Service::timeout() {
+	for (const QPair<QString, QString> &result : m_dirty) {
+		QDir infographicDirectory(result.first);
+
+		QStringList entries = infographicDirectory.entryList(
+				QStringList() << result.second,
+				QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
+
+		// We don't want to delete the last entry
+		entries.pop_back();
+		for (const QString &entry : entries) {
+			QFile::remove(infographicDirectory.filePath(entry));
+		}
+	}
+
+	m_dirty.clear();
 }

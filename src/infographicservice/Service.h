@@ -24,7 +24,9 @@
 #include <QDBusContext>
 #include <QDBusConnection>
 #include <QObject>
+#include <QSet>
 #include <QSharedPointer>
+#include <QTimer>
 
 class InfographicsAdaptor;
 
@@ -44,6 +46,9 @@ public Q_SLOTS:
 	void update(const QString &visualizer, const QStringList &sources,
 			const QString &file);
 
+protected Q_SLOTS:
+	void timeout();
+
 protected:
 	virtual unsigned int uid();
 
@@ -57,7 +62,11 @@ protected:
 
 	QSharedPointer<InfographicsAdaptor> m_adaptor;
 
+	QTimer m_dirtyTimer;
+
 	QCryptographicHash m_hash;
+
+	QSet<QPair<QString, QString>> m_dirty;
 };
 
 }

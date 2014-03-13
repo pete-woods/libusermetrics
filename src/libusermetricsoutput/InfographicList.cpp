@@ -21,7 +21,7 @@
 using namespace UserMetricsOutput;
 
 InfographicList::InfographicList(QObject *parent) :
-		QObject(parent) {
+		QStringListModel(parent) {
 }
 
 InfographicList::~InfographicList() {

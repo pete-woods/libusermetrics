@@ -31,21 +31,11 @@ FileUtils::FileUtils() {
 FileUtils::~FileUtils() {
 }
 
-QSet<QString> FileUtils::listDirectory(const QDir &directory,
-		QDir::Filters filters) {
-	QSet<QString> names;
+QStringList FileUtils::listDirectory(const QDir &directory,
+		QDir::Filters filters, QDir::SortFlags sort) {
+	QStringList names;
 	for (const QString& name : directory.entryList(
-			filters | QDir::NoDotAndDotDot)) {
-		names << directory.filePath(name);
-	}
-	return names;
-}
-
-QSet<QString> FileUtils::listDirectory(const QStringList &nameFilters,
-		const QDir &directory, QDir::Filters filters) {
-	QSet<QString> names;
-	for (const QString& name : directory.entryList(nameFilters,
-			filters | QDir::NoDotAndDotDot)) {
+			filters | QDir::NoDotAndDotDot, sort)) {
 		names << directory.filePath(name);
 	}
 	return names;

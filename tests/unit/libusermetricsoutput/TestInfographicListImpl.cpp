@@ -34,6 +34,7 @@ namespace {
 class TestInfographicListImpl: public Test {
 protected:
 	void SetUp() {
+		qRegisterMetaType<QVector<int>>("QVector<int>");
 		usermetricsDir = tempDir.path();
 	}
 
@@ -58,10 +59,10 @@ protected:
 		return output.fileName();
 	}
 
-	QStringList contents(QAbstractItemModel *model) {
+	QStringList contents(QAbstractItemModel &model) {
 		QStringList contents;
-		for (int i(0); i < model->rowCount(); ++i) {
-			contents << model->data(model->index(i, 0)).toString();
+		for (int i(0); i < model.rowCount(); ++i) {
+			contents << model.data(model.index(i, 0)).toString();
 		}
 		contents.sort();
 		return contents;
@@ -74,57 +75,48 @@ protected:
 
 TEST_F(TestInfographicListImpl, ModelUpdated) {
 	InfographicListImpl list(tempDir.path());
-	QAbstractItemModel *model(list.infographics());
+	EXPECT_EQ(QStringList(), contents(list));
 
-	QSignalSpy resetSpy(model, SIGNAL(modelReset()));
+	QSignalSpy resetSpy(&list, SIGNAL(modelReset()));
+	QSignalSpy dataChangedSpy(&list,
+			SIGNAL(
+					dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
 
 	list.setUid(1234);
 
+	createInfographic(1234, "com.ubuntu.camera", "apple-1234.svg", "<apple/>");
 	QString appleFile = createInfographic(1234, "com.ubuntu.camera",
-			"apple.svg", "<apple/>");
+			"apple-2345.svg", "<apple/>");
+
+	createInfographic(1234, "com.ubuntu.camera", "banana-1234.svg",
+			"<oldBanana/>");
+	createInfographic(1234, "com.ubuntu.camera", "banana-2345.svg",
+			"<oldBanana/>");
 	QString bananaFile = createInfographic(1234, "com.ubuntu.camera",
-			"banana.svg", "<banana/>");
+			"banana-3456.svg", "<banana/>");
+
+	createInfographic(1234, "com.ubuntu.camera", "cherry-1234.svg",
+			"<oldCherry/>");
+	createInfographic(1234, "com.ubuntu.camera", "cherry-2345.svg",
+			"<oldCherry/>");
+	QString cherryFile = createInfographic(1234, "com.ubuntu.camera",
+			"cherry-3456.svg", "<cherry/>");
 
 	resetSpy.wait();
 	ASSERT_EQ(1, resetSpy.size());
 	resetSpy.clear();
 
-	EXPECT_EQ(QStringList() << appleFile << bananaFile, contents(model));
+	EXPECT_EQ(QStringList() << appleFile << bananaFile << cherryFile,
+			contents(list));
 
-	QString fooFile = createInfographic(1234, "com.ubuntu.foo", "foo.svg",
+	QString fooFile = createInfographic(1234, "com.ubuntu.foo", "foo-1234.svg",
 			"<foo/>");
 
-	resetSpy.wait();
-	ASSERT_EQ(1, resetSpy.size());
+	dataChangedSpy.wait();
+	ASSERT_EQ(1, dataChangedSpy.size());
 
-	EXPECT_EQ(QStringList() << appleFile << bananaFile << fooFile,
-			contents(model));
-}
-
-TEST_F(TestInfographicListImpl, FilesUpdatedSignal) {
-	InfographicListImpl list(tempDir.path());
-	QAbstractItemModel *model(list.infographics());
-
-	QSignalSpy resetSpy(model, SIGNAL(modelReset()));
-	QSignalSpy filesUpdatedSpy(&list, SIGNAL(filesUpdated(QStringList)));
-
-	list.setUid(1234);
-
-	createInfographic(1234, "com.ubuntu.camera", "apple.svg", "<apple/>");
-	createInfographic(1234, "com.ubuntu.camera", "banana.svg", "<banana/>");
-
-	resetSpy.wait();
-	ASSERT_EQ(1, resetSpy.size());
-
-	createInfographic(1234, "com.ubuntu.foo", "foo.svg", "<foo/>");
-	QString bananaFile = createInfographic(1234, "com.ubuntu.camera",
-			"banana.svg", "<bananaBanana/>");
-
-	filesUpdatedSpy.wait();
-
-	ASSERT_EQ(1, filesUpdatedSpy.size());
-	ASSERT_EQ(QVariantList() << QVariant(QStringList() << bananaFile),
-			filesUpdatedSpy.at(0));
+	EXPECT_EQ(QStringList() << appleFile << bananaFile << cherryFile << fooFile,
+			contents(list));
 }
 
 } // namespace

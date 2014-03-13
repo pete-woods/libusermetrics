@@ -67,8 +67,6 @@
    fun:_Znwm
    fun:_ZN14QThreadPrivateC1EP11QThreadData
    fun:_ZN7QThreadC1EP7QObject
-   ...
-   fun:main
 }
 
 {
@@ -78,8 +76,6 @@
    fun:_Znwj
    fun:_ZN14QThreadPrivateC1EP11QThreadData
    fun:_ZN7QThreadC1EP7QObject
-   ...
-   fun:main
 }
 
 
