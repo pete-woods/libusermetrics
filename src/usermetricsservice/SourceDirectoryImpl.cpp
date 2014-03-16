@@ -41,12 +41,6 @@ SourceDirectoryImpl::~SourceDirectoryImpl() {
 }
 
 void SourceDirectoryImpl::fileChanged(const QString &path) {
-	// When a file is removed, even though we remove it from the watcher
-	// it still triggers a single fileChanged event.
-	if (!m_watcher.files().contains(path)) {
-		return;
-	}
-
 	sourceChanged(m_path, path);
 }
 
