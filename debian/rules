@@ -6,7 +6,7 @@ export DPKG_GENSYMBOLS_CHECK_LEVEL=4
 ifeq ($(DEB_HOST_ARCH),armhf)
         ENABLE_MEMCHECK_OPTION = OFF
 else
-        ENABLE_MEMCHECK_OPTION = ON
+        ENABLE_MEMCHECK_OPTION = OFF
 endif
 
 %:
