@@ -3,7 +3,8 @@
 
 export DPKG_GENSYMBOLS_CHECK_LEVEL=4
 
-ifeq ($(DEB_HOST_ARCH),armhf)
+export DEB_HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
+ifeq (,$(filter amd64 i386 powerpc,$(DEB_HOST_ARCH)))
         ENABLE_MEMCHECK_OPTION = OFF
 else
         ENABLE_MEMCHECK_OPTION = ON
