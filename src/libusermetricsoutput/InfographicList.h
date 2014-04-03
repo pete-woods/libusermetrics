@@ -38,13 +38,15 @@ namespace UserMetricsOutput {
  * infographic image files.
  *
  * Given a user ID, this class watches the corresponding
+ * directory in /var/lib/usermetrics/{userid}/ for changes
+ * to SVG files.
  *
  **/
 class Q_DECL_EXPORT InfographicList: public QStringListModel {
 Q_OBJECT
 
 /**
- * @brief The current username selected.
+ * @brief The current user ID selected.
  */
 Q_PROPERTY(unsigned int uid READ uid WRITE setUid NOTIFY uidChanged FINAL)
 
@@ -52,7 +54,8 @@ public:
 	/**
 	 * @brief Get a new instance of InfographicList.
 	 */
-	static InfographicList *getInstance();
+	static InfographicList *getInstance(
+			const QString &path = QString("/var/lib/usermetrics/"));
 
 	/**
 	 * @brief Destructor.
@@ -60,7 +63,7 @@ public:
 	virtual ~InfographicList();
 
 	/**
-	 * @brief The current userID selected.
+	 * @brief The current user ID selected.
 	 */
 	virtual unsigned int uid() const = 0;
 

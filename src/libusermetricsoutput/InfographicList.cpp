@@ -27,6 +27,6 @@ InfographicList::InfographicList(QObject *parent) :
 InfographicList::~InfographicList() {
 }
 
-InfographicList * InfographicList::getInstance() {
-	return new InfographicListImpl("/var/lib/usermetrics/");
+InfographicList * InfographicList::getInstance(const QString &path) {
+	return new InfographicListImpl(path);
 }

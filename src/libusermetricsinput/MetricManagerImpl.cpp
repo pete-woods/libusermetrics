@@ -16,6 +16,7 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
+#include <libusermetricscommon/FileUtils.h>
 #include <libusermetricsinput/MetricImpl.h>
 #include <libusermetricsinput/MetricManagerImpl.h>
 
@@ -26,12 +27,10 @@
 
 using namespace std;
 using namespace UserMetricsInput;
-
-static QRegularExpression CLICK_REGEX(
-		"^[a-z0-9][a-z0-9+.-]+_[a-zA-Z0-9+.-]+_[0-9][a-zA-Z0-9.+:~-]*$");
+using namespace UserMetricsCommon;
 
 static void shortApplicationId(QString &applicationId) {
-	QRegularExpressionMatch match = CLICK_REGEX.match(applicationId);
+	QRegularExpressionMatch match = FileUtils::CLICK_REGEX.match(applicationId);
 	if (match.hasMatch()) {
 		int index = applicationId.indexOf('_');
 		if (index != -1) {

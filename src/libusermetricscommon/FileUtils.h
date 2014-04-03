@@ -34,6 +34,8 @@ public:
 
 	virtual ~FileUtils();
 
+	static QRegularExpression CLICK_REGEX;
+
 	virtual QStringList listDirectory(const QDir &directory,
 			QDir::Filters filters, QDir::SortFlags sort = QDir::NoSort);
 
