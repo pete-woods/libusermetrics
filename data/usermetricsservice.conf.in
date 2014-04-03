@@ -1,0 +1,10 @@
+description "Service to connect infographic data sources to infographic visualizations"
+
+start on desktop-start
+stop on desktop-end
+
+respawn
+respawn limit 5 10
+
+exec @CMAKE_INSTALL_FULL_LIBEXECDIR@/libusermetrics/usermetricsservice
+

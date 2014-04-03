@@ -16,14 +16,28 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
+#include <libusermetricscommon/FileUtils.h>
 #include <libusermetricsinput/MetricImpl.h>
 #include <libusermetricsinput/MetricManagerImpl.h>
 
 #include <stdexcept>
 #include <QDebug>
+#include <QRegularExpression>
+
 
 using namespace std;
 using namespace UserMetricsInput;
+using namespace UserMetricsCommon;
+
+static void shortApplicationId(QString &applicationId) {
+	QRegularExpressionMatch match = FileUtils::CLICK_REGEX.match(applicationId);
+	if (match.hasMatch()) {
+		int index = applicationId.indexOf('_');
+		if (index != -1) {
+			applicationId.remove(index, applicationId.size());
+		}
+	}
+}
 
 MetricManagerImpl::MetricManagerImpl(Factory::Ptr factory,
 		const QDir &cacheDirectory, const QString &applicationId,
@@ -32,7 +46,11 @@ MetricManagerImpl::MetricManagerImpl(Factory::Ptr factory,
 	if (applicationId.isEmpty()) {
 		throw logic_error("Invalid application ID");
 	}
-	QDir applicationDirectory(cacheDirectory.filePath(applicationId));
+
+	QString shortId(applicationId);
+	shortApplicationId(shortId);
+
+	QDir applicationDirectory(cacheDirectory.filePath(shortId));
 	if (!applicationDirectory.mkpath("usermetrics")) {
 		throw logic_error("Cannot write to cache directory");
 	}

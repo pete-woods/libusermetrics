@@ -1,0 +1,9 @@
+{
+    "exec": "@CMAKE_INSTALL_FULL_LIBEXECDIR@/libusermetrics/infographic",
+    "type": "iterate",
+    "input": {
+        "*": [
+            ".*.libusermetrics.json"
+        ]
+    }
+}

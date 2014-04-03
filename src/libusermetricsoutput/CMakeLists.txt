@@ -12,6 +12,9 @@ set(USERMETRICSOUTPUT_SOURCES
 	GSettingsColorThemeProvider.cpp
 	DataSet.cpp
 	DataSource.cpp
+	DirectoryWatcher.cpp
+	InfographicList.cpp
+	InfographicListImpl.cpp
 	UserData.cpp
 	UserMetrics.cpp
 	UserMetricsImpl.cpp

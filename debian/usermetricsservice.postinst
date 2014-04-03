@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+dbus-send --system --print-reply                        \
+        --dest=org.freedesktop.DBus                     \
+        /org/freedesktop/DBus                           \
+        org.freedesktop.DBus.StartServiceByName         \
+        string:"com.canonical.Infographics" uint32:0     \
+        || true
+
+#DEBHELPER#
+
+exit 0

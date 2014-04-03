@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libusermetrics\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-09 10:15+0000\n"
+"POT-Creation-Date: 2014-02-19 16:51+0000\n"
 "PO-Revision-Date: 2013-07-05 15:09+0100\n"
 "Last-Translator: Pete Woods <pete.woods@canonical.com>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -90,6 +90,10 @@ msgstr "Usage: "
 #~ msgid "Attempt to update data owned by another user"
 #~ msgstr "Attempt to update data owned by another user"
 
+#, fuzzy
+#~ msgid "Could not locate user data"
+#~ msgstr "Couldn't save user data"
+
 #~ msgid "Could not open database"
 #~ msgstr "Could not open database"
 
@@ -101,9 +105,6 @@ msgstr "Usage: "
 
 #~ msgid "Could not save data source"
 #~ msgstr "Couldn't save data source"
-
-#~ msgid "Could not save user data"
-#~ msgstr "Couldn't save user data"
 
 #~ msgid "Data set query failed"
 #~ msgstr "Data set query failed"

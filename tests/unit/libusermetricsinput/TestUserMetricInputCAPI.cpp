@@ -48,9 +48,9 @@ protected:
 	QVariantMap readData(const QString &id) {
 		QDir cacheDir(QDir(m_temporaryDir.path()).filePath(".cache"));
 		QDir applicationDir(cacheDir.filePath("test-app"));
-		QDir metricDir(applicationDir.filePath("usermetrics"));
+		QDir usermetricsDir(applicationDir.filePath("usermetrics"));
 
-		QFile file(metricDir.filePath(id + ".json"));
+		QFile file(usermetricsDir.filePath(id + ".libusermetrics.json"));
 		EXPECT_TRUE(file.open(QIODevice::ReadOnly));
 		QJsonDocument doc(QJsonDocument::fromJson(file.readAll()));
 		file.close();

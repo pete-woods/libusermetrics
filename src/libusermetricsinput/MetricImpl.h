@@ -63,6 +63,8 @@ protected:
 
 	QString buildJsonFile();
 
+	QString buildTmpFile();
+
 	QDir m_metricDirectory;
 
 	MetricParameters m_parameters;

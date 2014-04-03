@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=com.canonical.Infographics
+Exec=@CMAKE_INSTALL_FULL_LIBEXECDIR@/libusermetrics/infographicservice
+User=usermetrics
+StandardOutput=syslog

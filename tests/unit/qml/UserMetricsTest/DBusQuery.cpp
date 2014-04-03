@@ -30,10 +30,10 @@ DBusQuery::DBusQuery(QObject *parent) :
 static QVariantMap fileContents(int index) {
 	QDir cacheDir(TEST_CACHE_DIR);
 	QDir applicationDir(cacheDir.filePath("test-app"));
-	QDir metricDir(applicationDir.filePath("usermetrics"));
+	QDir usermetricsDir(applicationDir.filePath("usermetrics"));
 
 	QFileInfoList list(
-			metricDir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot,
+			usermetricsDir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot,
 					QDir::Reversed));
 	if (index - 1 >= list.length()) {
 		return QVariantMap();

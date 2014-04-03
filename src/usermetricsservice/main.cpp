@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2014 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,31 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
+#include <usermetricsservice/Factory.h>
+
+#include <QCoreApplication>
+#include <QDebug>
+#include <csignal>
+
+using namespace UserMetricsService;
+
+static void exitQt(int sig) {
+	Q_UNUSED(sig);
+	QCoreApplication::exit(0);
+}
+
 int main(int argc, char *argv[]) {
-	return 0;
+	QCoreApplication application(argc, argv);
+
+	signal(SIGINT, &exitQt);
+	signal(SIGTERM, &exitQt);
+
+	try {
+		Factory factory;
+		factory.singletonService();
+		return application.exec();
+	} catch (std::exception &e) {
+		qWarning() << "Usermetrics Service:" << e.what();
+		return 1;
+	}
 }

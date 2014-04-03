@@ -1,0 +1,13 @@
+{
+    "exec": "/bin/cat",
+    "type": "aggregate",
+    "input": {
+        "com.ubuntu.camera": [
+            "camera-photos.libusermetrics.json",
+            "camera-videos.libusermetrics.json"
+        ],
+        "foo": [
+            "source-id.libusermetrics.json"
+        ]
+    }
+}

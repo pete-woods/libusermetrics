@@ -2,7 +2,14 @@
 set(USERMETRICS_COMMON_SOURCES
 	DateFactory.cpp
 	DateFactoryImpl.cpp
+	FileUtils.cpp
 	Localisation.cpp
+)
+
+qt5_add_dbus_interface(
+	USERMETRICS_COMMON_SOURCES
+	${INFOGRAPHIC_SERVICE_XML}
+	InfographicsInterface
 )
 
 add_library(
@@ -14,5 +21,5 @@ add_library(
 qt5_use_modules(
 	usermetricscommon
 	Core
+	DBus
 )
-

@@ -1,0 +1,3 @@
+Pattern: ${home}/.cache/usermetrics/sources/${id}.json
+User-Level: yes
+Hook-Name: usermetrics

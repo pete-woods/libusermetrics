@@ -70,7 +70,7 @@ protected:
 
 	QVariantMap readData(const QString &id) {
 		QVariantMap map;
-		QFile file(metricDir.filePath(id + ".json"));
+		QFile file(metricDir.filePath(id + ".libusermetrics.json"));
 		EXPECT_TRUE(file.open(QIODevice::ReadOnly));
 		QJsonDocument doc(QJsonDocument::fromJson(file.readAll()));
 		file.close();

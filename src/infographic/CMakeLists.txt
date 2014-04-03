@@ -10,8 +10,8 @@ add_executable(
 )
 
 install(
-  TARGETS infographic
-  RUNTIME DESTINATION bin
+	TARGETS infographic
+	RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/libusermetrics"
 )
 
 qt5_use_modules(
