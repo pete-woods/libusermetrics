@@ -35,7 +35,7 @@ libusermetricsoutput.so.1 libusermetricsoutput1 #MINVER#
  (c++)"UserMetricsOutput::UserMetrics::~UserMetrics()@Base" 1.0.1
  (c++)"UserMetricsOutput::UserMetrics::~UserMetrics()@Base" 1.0.1
  (c++)"UserMetricsOutput::InfographicList::uidChanged(unsigned int)@Base" 0replaceme
- (c++)"UserMetricsOutput::InfographicList::getInstance()@Base" 0replaceme
+ (c++)"UserMetricsOutput::InfographicList::getInstance(QString const&)@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::qt_metacall(QMetaObject::Call, int, void**)@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::qt_metacast(char const*)@Base" 0replaceme
  (c++)"UserMetricsOutput::InfographicList::staticMetaObject@Base" 0replaceme
