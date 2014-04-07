@@ -102,7 +102,8 @@ Depends: ${misc:Depends},
          qtdeclarative5-qtquick2-plugin,
          libusermetricsinput1 (= ${binary:Version}),
 Description: QML bindings for libusermetricsinput
- A set of bindings allowing the use of libusermetricsinput from QML applications.
+ A set of bindings allowing the use of libusermetricsinput from
+ QML applications.
 
 Package: qtdeclarative5-infographics0.1
 Architecture: any
@@ -111,4 +112,5 @@ Depends: ${misc:Depends},
          qtdeclarative5-qtquick2-plugin,
          libusermetricsoutput1 (= ${binary:Version}),
 Description: QML bindings for libusermetricsoutput
- A set of bindings allowing the use of libusermetricsoutput from QML applications.
+ A set of bindings allowing the use of libusermetricsoutput from
+ QML applications.
