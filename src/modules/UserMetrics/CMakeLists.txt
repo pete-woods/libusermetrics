@@ -27,11 +27,11 @@ qt5_use_modules(
 
 export_qmlfiles(
 	UserMetrics
-	PLUGIN_SUBPATH "Infographics"
+	PLUGIN_SUBPATH "UserMetrics"
 )
 
 export_qmlplugin(
 	UserMetrics 0.1
-	PLUGIN_SUBPATH "Infographics"
+	PLUGIN_SUBPATH "UserMetrics"
 	TARGETS usermetrics-qml
 )
