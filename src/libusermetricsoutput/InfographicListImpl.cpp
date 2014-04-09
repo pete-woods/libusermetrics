@@ -29,8 +29,8 @@ InfographicListImpl::InfographicListImpl(const QString &path, QObject *parent) :
 		InfographicList(parent), m_path(path), m_uid(0) {
 
 	connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
-	connect(&m_filesystemWatcher, SIGNAL(directoryChanged()), this,
-			SLOT(internalDirectoryChanged()));
+	connect(&m_filesystemWatcher, SIGNAL(directoryChanged(const QString &)),
+			this, SLOT(internalDirectoryChanged()));
 
 	m_timer.setSingleShot(true);
 	m_filesystemWatcher.addPath(path);
@@ -51,10 +51,13 @@ void InfographicListImpl::newDirectoryWatcher() {
 			new DirectoryWatcher(m_userDir, 1, FileUtils::Ptr(new FileUtils())),
 			&QObject::deleteLater);
 	m_directoryWatcher->moveToThread(&m_workerThread);
-	connect(m_directoryWatcher.data(), SIGNAL(directoryChanged()),
-			this, SLOT(directoryContentsChanged()));
-	connect(m_directoryWatcher.data(), SIGNAL(directoryRemoved()),
-			this, SLOT(directoryRemoved()));
+	connect(m_directoryWatcher.data(),
+			SIGNAL(directoryChanged(const QString &, const QStringList &)),
+			this,
+			SLOT(directoryContentsChanged(const QString &, const QStringList &)));
+	connect(m_directoryWatcher.data(),
+			SIGNAL(directoryRemoved(const QString &)), this,
+			SLOT(directoryRemoved(const QString &)));
 	QTimer::singleShot(0, m_directoryWatcher.data(), SLOT(start()));
 }
 

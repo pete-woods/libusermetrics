@@ -47,8 +47,8 @@ DirectoryWatcher::DirectoryWatcher(const QDir &path, unsigned int maxDepth,
 
 	m_watcher.addPath(path.path());
 
-	connect(&m_watcher, SLOT(directoryChanged()), this,
-			SIGNAL(internalDirectoryChanged()));
+	connect(&m_watcher, SIGNAL(directoryChanged(const QString &)), this,
+			SLOT(internalDirectoryChanged()));
 }
 
 DirectoryWatcher::~DirectoryWatcher() {
@@ -101,10 +101,14 @@ void DirectoryWatcher::internalDirectoryChanged() {
 		DirectoryWatcher::Ptr watcher(
 				new DirectoryWatcher(name, m_maxDepth - 1, m_fileUtils));
 		m_directories.insert(name, watcher);
-		connect(watcher.data(), SLOT(directoryChanged()), this,
-				SIGNAL(directoryChanged()));
-		connect(watcher.data(), SLOT(directoryRemoved()), this,
-				SIGNAL(directoryRemoved()));
+		connect(watcher.data(),
+				SIGNAL(directoryChanged(const QString &, const QStringList &)),
+				this,
+				SIGNAL(directoryChanged(const QString &, const QStringList &)));
+		connect(watcher.data(),
+				SIGNAL(directoryRemoved(const QString &)),
+				this,
+				SIGNAL(directoryRemoved(const QString &)));
 		watcher->start();
 	}
 }
