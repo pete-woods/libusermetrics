@@ -47,8 +47,8 @@ DirectoryWatcher::DirectoryWatcher(const QDir &path, unsigned int maxDepth,
 
 	m_watcher.addPath(path.path());
 
-	connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this,
-			&DirectoryWatcher::internalDirectoryChanged);
+	connect(&m_watcher, SLOT(directoryChanged()), this,
+			SIGNAL(internalDirectoryChanged()));
 }
 
 DirectoryWatcher::~DirectoryWatcher() {
@@ -101,10 +101,10 @@ void DirectoryWatcher::internalDirectoryChanged() {
 		DirectoryWatcher::Ptr watcher(
 				new DirectoryWatcher(name, m_maxDepth - 1, m_fileUtils));
 		m_directories.insert(name, watcher);
-		connect(watcher.data(), &DirectoryWatcher::directoryChanged, this,
-				&DirectoryWatcher::directoryChanged);
-		connect(watcher.data(), &DirectoryWatcher::directoryRemoved, this,
-				&DirectoryWatcher::directoryRemoved);
+		connect(watcher.data(), SLOT(directoryChanged()), this,
+				SIGNAL(directoryChanged()));
+		connect(watcher.data(), SLOT(directoryRemoved()), this,
+				SIGNAL(directoryRemoved()));
 		watcher->start();
 	}
 }

@@ -28,9 +28,9 @@ using namespace UserMetricsOutput;
 InfographicListImpl::InfographicListImpl(const QString &path, QObject *parent) :
 		InfographicList(parent), m_path(path), m_uid(0) {
 
-	connect(&m_timer, &QTimer::timeout, this, &InfographicListImpl::timeout);
-	connect(&m_filesystemWatcher, &QFileSystemWatcher::directoryChanged, this,
-			&InfographicListImpl::internalDirectoryChanged);
+	connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+	connect(&m_filesystemWatcher, SIGNAL(directoryChanged()), this,
+			SLOT(internalDirectoryChanged()));
 
 	m_timer.setSingleShot(true);
 	m_filesystemWatcher.addPath(path);
@@ -51,10 +51,10 @@ void InfographicListImpl::newDirectoryWatcher() {
 			new DirectoryWatcher(m_userDir, 1, FileUtils::Ptr(new FileUtils())),
 			&QObject::deleteLater);
 	m_directoryWatcher->moveToThread(&m_workerThread);
-	connect(m_directoryWatcher.data(), &DirectoryWatcher::directoryChanged,
-			this, &InfographicListImpl::directoryContentsChanged);
-	connect(m_directoryWatcher.data(), &DirectoryWatcher::directoryRemoved,
-			this, &InfographicListImpl::directoryRemoved);
+	connect(m_directoryWatcher.data(), SIGNAL(directoryChanged()),
+			this, SLOT(directoryContentsChanged()));
+	connect(m_directoryWatcher.data(), SIGNAL(directoryRemoved()),
+			this, SLOT(directoryRemoved()));
 	QTimer::singleShot(0, m_directoryWatcher.data(), SLOT(start()));
 }
 
