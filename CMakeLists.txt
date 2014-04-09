@@ -69,6 +69,7 @@ add_definitions(
 	-Wextra
 	-DLOCALEDIR="${CMAKE_INSTALL_FULL_DATADIR}/locale"
 )
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fPIE")
 
 set(DOXYFILE_SOURCE_DIR "include")
 set(DOXYFILE_EXTRA_SOURCES "doc")
