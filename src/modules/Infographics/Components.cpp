@@ -28,10 +28,7 @@ static QObject *infographicsProvider(QQmlEngine *engine,
 }
 
 void Components::registerTypes(const char *uri) {
+    Q_ASSERT(uri == QLatin1String("Infographics"));
 	qmlRegisterSingletonType<UserMetricsOutput::InfographicList>(uri, 0, 1,
 			"InfographicList", infographicsProvider);
-}
-
-void Components::initializeEngine(QQmlEngine *engine, const char *uri) {
-	QQmlExtensionPlugin::initializeEngine(engine, uri);
 }

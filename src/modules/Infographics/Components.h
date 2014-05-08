@@ -29,8 +29,6 @@ Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 
 public:
 	void registerTypes(const char *uri);
-
-	void initializeEngine(QQmlEngine *engine, const char *uri);
 };
 
 #endif // MODULES_INFOGRAPHICS_COMPONENTS_H

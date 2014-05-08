@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libusermetrics\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 16:51+0000\n"
+"POT-Creation-Date: 2014-05-07 14:34+0100\n"
 "PO-Revision-Date: 2013-07-05 15:09+0100\n"
 "Last-Translator: Pete Woods <pete.woods@canonical.com>\n"
 "Language-Team: British English <en@li.org>\n"
@@ -51,7 +51,7 @@ msgstr "Failed to register user metric:"
 msgid "Failed to update metric:"
 msgstr "Failed to update metric:"
 
-#: src/libusermetricsinput/MetricImpl.cpp:216
+#: src/libusermetricsinput/MetricImpl.cpp:223
 #: src/libusermetricsoutput/UserMetricsImpl.cpp:267
 msgid "No data for today"
 msgstr "No data for today"
