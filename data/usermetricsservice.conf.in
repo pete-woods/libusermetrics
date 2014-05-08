@@ -1,6 +1,6 @@
 description "Service to connect infographic data sources to infographic visualizations"
 
-start on desktop-start
+start on started dbus
 stop on desktop-end
 
 respawn
