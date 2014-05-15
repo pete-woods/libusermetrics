@@ -58,10 +58,7 @@ QByteArray QProcessExecutor::execute(const QString &program,
 	}
 
 	QProcess process;
-
-	qDebug() << "Starting process:" << m_aaExec << finalArguments;
 	process.start(m_aaExec, finalArguments);
-	qDebug () << process.waitForStarted();
 
 	if (process.waitForFinished(5000)) {
 		output = process.readAllStandardOutput();
