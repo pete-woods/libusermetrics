@@ -44,6 +44,8 @@ public:
 
 	void setUid(unsigned int uid) override;
 
+	QString get(int index) const override;
+
 protected Q_SLOTS:
 	void internalDirectoryChanged();
 

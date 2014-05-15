@@ -74,6 +74,13 @@ void InfographicListImpl::setUid(unsigned int uid) {
 	}
 }
 
+QString InfographicListImpl::get(int i) const {
+	if (i < 0 || i >= rowCount()) {
+		return QString();
+	}
+	return data(index(i, 0), Qt::DisplayRole).toString();
+}
+
 void InfographicListImpl::internalDirectoryChanged() {
 	if (m_uid == 0) {
 		return;

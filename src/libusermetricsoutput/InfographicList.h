@@ -67,6 +67,12 @@ public:
 	 */
 	virtual unsigned int uid() const = 0;
 
+	/**
+	 * @brief Access the infographic path at the specified index
+	 *
+	 * @param index The index to access
+	 */
+	Q_INVOKABLE virtual QString get(int index) const = 0;
 
 Q_SIGNALS:
 	/**
