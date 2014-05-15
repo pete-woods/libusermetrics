@@ -33,7 +33,7 @@ public:
 
 	virtual ~Executor();
 
-	virtual QByteArray execute(const QString &program,
+	virtual QByteArray execute(const QString &program, const QString &profile,
 			const QStringList &arguments) = 0;
 };
 

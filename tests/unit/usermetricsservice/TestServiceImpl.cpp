@@ -121,7 +121,7 @@ TEST_F(TestServiceImpl, Startup) {
 	ON_CALL(*iterateInfographic, isValid()).WillByDefault(Return(true));
 	EXPECT_CALL(*iterateInfographic,
 			sourcesChanged(changedSources, allSources));
-	EXPECT_CALL(*factory, newInfographic(HasPath(TEST_ITERATE_INFOGRAPHIC))).WillOnce(
+	EXPECT_CALL(*factory, newInfographic(HasPath(TEST_ITERATE_INFOGRAPHIC), false)).WillOnce(
 			Return(iterateInfographic));
 
 	QSharedPointer<MockInfographic> aggregateInfographic(
@@ -129,7 +129,7 @@ TEST_F(TestServiceImpl, Startup) {
 	ON_CALL(*aggregateInfographic, isValid()).WillByDefault(Return(true));
 	EXPECT_CALL(*aggregateInfographic,
 			sourcesChanged(changedSources, allSources));
-	EXPECT_CALL(*factory, newInfographic(HasPath(TEST_AGGREGATE_INFOGRAPHIC))).WillOnce(
+	EXPECT_CALL(*factory, newInfographic(HasPath(TEST_AGGREGATE_INFOGRAPHIC), false)).WillOnce(
 			Return(aggregateInfographic));
 
 	EXPECT_CALL(*resultTransport, clear());

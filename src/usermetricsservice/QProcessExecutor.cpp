@@ -36,7 +36,7 @@ QProcessExecutor::~QProcessExecutor() {
 }
 
 QByteArray QProcessExecutor::execute(const QString &program,
-		const QStringList &arguments) {
+		const QString &profile, const QStringList &arguments) {
 
 	m_tempDirectory.removeRecursively();
 	m_usermetricsDirectory.mkpath("tmp");
@@ -44,6 +44,7 @@ QByteArray QProcessExecutor::execute(const QString &program,
 	QByteArray output;
 
 	QStringList finalArguments;
+	finalArguments << profile;
 	finalArguments << program;
 	for (int i(0); i < arguments.size(); ++i) {
 		const QString &argument(arguments[i]);
@@ -58,7 +59,9 @@ QByteArray QProcessExecutor::execute(const QString &program,
 
 	QProcess process;
 
+	qDebug() << "Starting process:" << m_aaExec << finalArguments;
 	process.start(m_aaExec, finalArguments);
+	qDebug () << process.waitForStarted();
 
 	if (process.waitForFinished(5000)) {
 		output = process.readAllStandardOutput();

@@ -78,9 +78,9 @@ ResultTransport::Ptr Factory::singletonResultTransport() {
 	return m_resultTransport;
 }
 
-Infographic::Ptr Factory::newInfographic(const QFile &path) {
+Infographic::Ptr Factory::newInfographic(const QFile &path, bool click) {
 	return Infographic::Ptr(
-			new InfographicImpl(path, singletonExecutor(),
+			new InfographicImpl(path, click, singletonExecutor(),
 					singletonResultTransport()));
 }
 

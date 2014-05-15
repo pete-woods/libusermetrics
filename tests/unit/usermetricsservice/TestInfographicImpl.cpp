@@ -47,7 +47,7 @@ protected:
 
 	Infographic::Ptr newInfographic(const QString &path) {
 		return Infographic::Ptr(
-				new InfographicImpl(path, executor, resultTransport));
+				new InfographicImpl(path, false, executor, resultTransport));
 	}
 };
 
@@ -68,7 +68,7 @@ TEST_F(TestInfographicImpl, Iterate) {
 	QStringList orchard;
 	orchard << "/path/orchard.libusermetrics.json";
 	EXPECT_CALL(*executor,
-			execute(QString("/bin/echo"), orchard)).WillOnce(Return(orchardBa));
+			execute(QString("/bin/echo"), QString(), orchard)).WillOnce(Return(orchardBa));
 	EXPECT_CALL(*resultTransport,
 			send(QString("test-iterate"), orchard, orchardBa));
 
@@ -76,7 +76,7 @@ TEST_F(TestInfographicImpl, Iterate) {
 	QStringList tree;
 	tree << "/path/tree.libusermetrics.json";
 	EXPECT_CALL(*executor,
-			execute(QString("/bin/echo"), tree)).WillOnce(Return(treeBa));
+			execute(QString("/bin/echo"), QString(), tree)).WillOnce(Return(treeBa));
 	EXPECT_CALL(*resultTransport, send(QString("test-iterate"), tree, treeBa));
 
 	infographic->sourcesChanged(changedSources, allSources);
@@ -115,7 +115,7 @@ TEST_F(TestInfographicImpl, Aggregate) {
 			<< "/path/camera-videos.libusermetrics.json"
 			<< "/path/source-id.libusermetrics.json";
 	EXPECT_CALL(*executor,
-			execute(QString("/bin/cat"), files)).WillOnce(Return(ba));
+			execute(QString("/bin/cat"), QString(), files)).WillOnce(Return(ba));
 	EXPECT_CALL(*resultTransport, send(QString("test-aggregate"), files, ba));
 
 	infographic->sourcesChanged(changedSources, allSources);

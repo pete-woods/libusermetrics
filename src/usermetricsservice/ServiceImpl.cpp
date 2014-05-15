@@ -41,7 +41,8 @@ ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
 		throw logic_error("Cannot create sources directory");
 	}
 
-	m_infographicDirectories << usermetricsDirectory.filePath("infographics");
+	m_clickPath = usermetricsDirectory.filePath("infographics");
+	m_infographicDirectories << m_clickPath;
 	m_infographicDirectories << packageInfographics.path();
 	m_sourcesDirectory = usermetricsDirectory.filePath("sources");
 
@@ -85,7 +86,8 @@ void ServiceImpl::updateInfographicList() {
 	// Work out the names we need to add
 	names.subtract(m_infographics.keys().toSet());
 	for (const QString &name : names) {
-		Infographic::Ptr infographic(m_factory.newInfographic(name));
+		bool click = name.startsWith(m_clickPath);
+		Infographic::Ptr infographic(m_factory.newInfographic(name, click));
 		m_infographics.insert(name, infographic);
 		if (infographic->isValid()) {
 			connect(this, &Service::sourcesChanged, infographic.data(),

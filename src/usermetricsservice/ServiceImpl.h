@@ -64,6 +64,8 @@ protected:
 
 	QList<QString> m_infographicDirectories;
 
+	QString m_clickPath;
+
 	QFileSystemWatcher m_infographicWatcher;
 
 	QDir m_sourcesDirectory;

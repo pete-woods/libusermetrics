@@ -39,7 +39,7 @@ public:
 
 	MOCK_METHOD0(singletonResultTransport, ResultTransport::Ptr());
 
-	MOCK_METHOD1(newInfographic, Infographic::Ptr(const QFile &));
+	MOCK_METHOD2(newInfographic, Infographic::Ptr(const QFile &, bool));
 
 	MOCK_METHOD1(newSourceDirectory, SourceDirectory::Ptr(const QDir &));
 };
@@ -47,7 +47,7 @@ public:
 class MockExecutor: public Executor {
 public:
 
-	MOCK_METHOD2(execute, QByteArray(const QString &,
+	MOCK_METHOD3(execute, QByteArray(const QString &, const QString &,
 					const QStringList &));
 };
 

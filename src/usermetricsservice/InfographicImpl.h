@@ -34,7 +34,7 @@ namespace UserMetricsService {
 
 class InfographicImpl: public Infographic {
 public:
-	InfographicImpl(const QFile &path, Executor::Ptr executor,
+	InfographicImpl(const QFile &path, bool click, Executor::Ptr executor,
 			ResultTransport::Ptr resultTransport);
 
 	virtual ~InfographicImpl();
@@ -57,6 +57,8 @@ protected:
 	QStringList match(const QMultiMap<QString, QString>& changedSources);
 
 	QFile m_path;
+
+	QString m_profile;
 
 	Executor::Ptr m_executor;
 

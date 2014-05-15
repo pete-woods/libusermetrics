@@ -16,19 +16,41 @@
  * Author: Pete Woods <pete.woods@canonical.com>
  */
 
+#include <cerrno>
+#include <iostream>
 #include <unistd.h>
+#include <string>
 #include <sys/apparmor.h>
 
+using namespace std;
+
 int main(int argc, char **argv) {
-	if (argc < 2) {
+	if (argc < 3) {
 		return 1;
 	}
 
-	// Shift off the first argument
-	++argv;
+	string profile(argv[1]);
 
-//	TODO Enable the profile switching
-//	aa_change_onexec("infographic");
+	// Shift off the first two arguments
+	++argv; // program name
+	++argv; // profile
+
+	if (!profile.empty()) {
+		if (aa_change_onexec(profile.c_str()) < 0) {
+			switch (errno) {
+			case ENOENT:
+			case EACCES:
+				cerr << "Profile does not exist" << endl;
+				break;
+			case EINVAL:
+				cerr << "AppArmor interface not available" << endl;
+				break;
+			default:
+				cerr << "Unknown error" << endl;
+			}
+			return 1;
+		}
+	}
 
 	return execv(*argv, argv);
 }

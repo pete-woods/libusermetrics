@@ -48,7 +48,7 @@ public:
 
 	virtual ResultTransport::Ptr singletonResultTransport();
 
-	virtual Infographic::Ptr newInfographic(const QFile &path);
+	virtual Infographic::Ptr newInfographic(const QFile &path, bool click);
 
 	virtual SourceDirectory::Ptr newSourceDirectory(const QDir &path);
 

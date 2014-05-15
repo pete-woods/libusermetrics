@@ -31,7 +31,8 @@ public:
 
 	virtual ~QProcessExecutor();
 
-	QByteArray execute(const QString &program, const QStringList &arguments);
+	QByteArray execute(const QString &program, const QString &profile,
+			const QStringList &arguments) override;
 
 protected:
 	QDir m_usermetricsDirectory;
