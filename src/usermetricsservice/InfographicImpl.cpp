@@ -30,16 +30,12 @@ using namespace UserMetricsService;
 
 InfographicImpl::InfographicImpl(const QFile &path, bool click,
 		Executor::Ptr executor, ResultTransport::Ptr resultTransport) :
-		m_path(path.fileName()), m_executor(executor), m_resultTransport(
+		m_path(path.fileName()), m_click(click), m_executor(executor), m_resultTransport(
 				resultTransport), m_type(Type::INVALID), m_ruleCount(0) {
 
 	if (!m_path.open(QIODevice::ReadOnly)) {
 		qWarning() << "Failed to open path:" << m_path.fileName();
 		return;
-	}
-
-	if (click) {
-		m_profile = QFileInfo(m_path).baseName();
 	}
 
 	QByteArray ba(m_path.readAll());
@@ -163,7 +159,8 @@ void InfographicImpl::aggregate(
 }
 
 void InfographicImpl::execute(const QStringList &arguments) {
-	QByteArray ba(m_executor->execute(m_exec, m_profile, arguments));
+	QByteArray ba(
+			m_executor->execute(m_exec, m_click ? m_id : QString(), arguments));
 
 	if (ba.isEmpty()) {
 		qWarning() << "No data provided by infographic" << m_exec;

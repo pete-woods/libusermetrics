@@ -58,7 +58,7 @@ protected:
 
 	QFile m_path;
 
-	QString m_profile;
+	bool m_click;
 
 	Executor::Ptr m_executor;
 

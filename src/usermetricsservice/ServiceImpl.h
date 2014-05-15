@@ -34,7 +34,8 @@ class ServiceImpl: public Service {
 Q_OBJECT
 
 public:
-	ServiceImpl(const QDir &cacheDirectory, const QDir &packageInfographics,
+	ServiceImpl(const QDir &localInfographics, const QDir &cacheDirectory,
+			const QDir &packageInfographics,
 			UserMetricsCommon::FileUtils::Ptr fileUtils,
 			ResultTransport::Ptr resultTransport, Factory &factory);
 
@@ -52,6 +53,8 @@ protected Q_SLOTS:
 	QMultiMap<QString, QString> allSources();
 
 protected:
+	QDir m_localDirectory;
+
 	QDir m_cacheDirectory;
 
 	UserMetricsCommon::FileUtils::Ptr m_fileUtils;

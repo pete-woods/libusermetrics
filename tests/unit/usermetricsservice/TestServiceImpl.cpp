@@ -43,10 +43,10 @@ protected:
 		qRegisterMetaType<QMultiMap<QString, QString>>(
 				"QMultiMap<QString, QString>");
 
-		cacheDir = tempDir.path();
-		usermetricsDir = cacheDir.filePath("usermetrics");
-		sourcesDir = usermetricsDir.filePath("sources");
-		ASSERT_TRUE(usermetricsDir.mkpath("sources"));
+		cacheDir = QDir(tempDir.path()).filePath(".cache");
+		localDir = QDir(tempDir.path()).filePath(".local/share/libusermetrics");
+		sourcesDir = localDir.filePath("sources");
+		ASSERT_TRUE(localDir.mkpath("sources"));
 
 		factory.reset(new NiceMock<MockFactory>);
 		fileUtils.reset(new FileUtils);
@@ -55,7 +55,7 @@ protected:
 
 	Service::Ptr newService() {
 		return Service::Ptr(
-				new ServiceImpl(cacheDir.path(), QDir(TEST_INFOGRAPHICS_DIR),
+				new ServiceImpl(localDir, cacheDir, QDir(TEST_INFOGRAPHICS_DIR),
 						fileUtils, resultTransport, *factory));
 	}
 
@@ -98,7 +98,7 @@ protected:
 
 	QDir cacheDir;
 
-	QDir usermetricsDir;
+	QDir localDir;
 
 	QDir sourcesDir;
 };

@@ -26,25 +26,24 @@ using namespace UserMetricsCommon;
 using namespace UserMetricsService;
 using namespace std;
 
-ServiceImpl::ServiceImpl(const QDir &cacheDirectory,
+ServiceImpl::ServiceImpl(const QDir &localDirectory, const QDir &cacheDirectory,
 		const QDir &packageInfographics, FileUtils::Ptr fileUtils,
 		ResultTransport::Ptr resultTransport, Factory &factory) :
-		m_cacheDirectory(cacheDirectory), m_fileUtils(fileUtils), m_resultTransport(
-				resultTransport), m_factory(factory) {
-	QDir usermetricsDirectory(cacheDirectory.filePath("usermetrics"));
-
-	if (!usermetricsDirectory.mkpath("infographics")) {
+		m_localDirectory(localDirectory), m_cacheDirectory(cacheDirectory), m_fileUtils(
+				fileUtils), m_resultTransport(resultTransport), m_factory(
+				factory) {
+	if (!localDirectory.mkpath("infographics")) {
 		throw logic_error("Cannot create infographics directory");
 	}
 
-	if (!usermetricsDirectory.mkpath("sources")) {
+	if (!localDirectory.mkpath("sources")) {
 		throw logic_error("Cannot create sources directory");
 	}
 
-	m_clickPath = usermetricsDirectory.filePath("infographics");
+	m_clickPath = localDirectory.filePath("infographics");
 	m_infographicDirectories << m_clickPath;
 	m_infographicDirectories << packageInfographics.path();
-	m_sourcesDirectory = usermetricsDirectory.filePath("sources");
+	m_sourcesDirectory = localDirectory.filePath("sources");
 
 	m_timer.setSingleShot(true);
 
