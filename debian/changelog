@@ -5,6 +5,12 @@ libusermetrics (1.2.0-0ubuntu1) UNRELEASED; urgency=medium
 
  -- Pete Woods <pete.woods@canonical.com>  Mon, 06 Jan 2014 09:36:20 +0000
 
+libusermetrics (1.1.1+14.04.20140305-0ubuntu4) utopic; urgency=medium
+
+  * Disable valgrind on powerpc
+
+ -- Ricardo Salveti de Araujo <ricardo.salveti@canonical.com>  Tue, 06 May 2014 17:16:21 -0300
+
 libusermetrics (1.1.1+14.04.20140305-0ubuntu3) trusty; urgency=medium
 
   * debian/control: fixing wrong Vcs entries
