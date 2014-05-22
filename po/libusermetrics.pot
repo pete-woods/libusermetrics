@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libusermetrics\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-02 20:57+0000\n"
+"POT-Creation-Date: 2014-05-19 08:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgstr ""
 msgid "DATA_SOURCE_ID FORMAT_STRING EMPTY_DATA_STRING USERNAME [AMOUNT]"
 msgstr ""
 
-#: src/libusermetricsinput/MetricImpl.cpp:216
+#: src/libusermetricsinput/MetricImpl.cpp:223
 #: src/libusermetricsoutput/UserMetricsImpl.cpp:267
 msgid "No data for today"
 msgstr ""

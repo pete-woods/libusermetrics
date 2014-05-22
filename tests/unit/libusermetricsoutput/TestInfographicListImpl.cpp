@@ -20,6 +20,7 @@
 
 #include <QDebug>
 #include <QSignalSpy>
+#include <QStringList>
 #include <QTemporaryDir>
 
 #include <gtest/gtest.h>
@@ -59,10 +60,11 @@ protected:
 		return output.fileName();
 	}
 
-	QStringList contents(QAbstractItemModel &model) {
+	QStringList contents(InfographicList &model, unsigned int count) {
 		QStringList contents;
-		for (int i(0); i < model.rowCount(); ++i) {
-			contents << model.data(model.index(i, 0)).toString();
+		for (unsigned int i(0); i < count; ++i) {
+			contents << model.path();
+			model.next();
 		}
 		contents.sort();
 		return contents;
@@ -75,12 +77,9 @@ protected:
 
 TEST_F(TestInfographicListImpl, ModelUpdated) {
 	InfographicListImpl list(tempDir.path());
-	EXPECT_EQ(QStringList(), contents(list));
+	EXPECT_EQ(QStringList(), contents(list, 0));
 
-	QSignalSpy resetSpy(&list, SIGNAL(modelReset()));
-	QSignalSpy dataChangedSpy(&list,
-			SIGNAL(
-					dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+	QSignalSpy dataChangedSpy(&list, SIGNAL(pathChanged(const QString &)));
 
 	list.setUid(1234);
 
@@ -102,21 +101,21 @@ TEST_F(TestInfographicListImpl, ModelUpdated) {
 	QString cherryFile = createInfographic(1234, "com.ubuntu.camera",
 			"cherry-3456.svg", "<cherry/>");
 
-	resetSpy.wait();
-	ASSERT_EQ(1, resetSpy.size());
-	resetSpy.clear();
+	dataChangedSpy.wait();
+	ASSERT_FALSE(dataChangedSpy.isEmpty());
+	dataChangedSpy.clear();
 
 	EXPECT_EQ(QStringList() << appleFile << bananaFile << cherryFile,
-			contents(list));
+			contents(list, 3));
 
 	QString fooFile = createInfographic(1234, "com.ubuntu.foo", "foo-1234.svg",
 			"<foo/>");
 
 	dataChangedSpy.wait();
-	ASSERT_EQ(1, dataChangedSpy.size());
+	ASSERT_FALSE(dataChangedSpy.isEmpty());
 
 	EXPECT_EQ(QStringList() << appleFile << bananaFile << cherryFile << fooFile,
-			contents(list));
+			contents(list, 4));
 }
 
 } // namespace

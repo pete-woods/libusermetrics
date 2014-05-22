@@ -19,8 +19,7 @@
 #ifndef USERMETRICSOUTPUT_INFOGRAPHICLIST_H_
 #define USERMETRICSOUTPUT_INFOGRAPHICLIST_H_
 
-#include <QtCore/QStringList>
-#include <QtCore/QStringListModel>
+#include <QtCore/QObject>
 
 /**
  * @{
@@ -42,13 +41,18 @@ namespace UserMetricsOutput {
  * to SVG files.
  *
  **/
-class Q_DECL_EXPORT InfographicList: public QStringListModel {
+class Q_DECL_EXPORT InfographicList: public QObject {
 Q_OBJECT
 
 /**
  * @brief The current user ID selected.
  */
 Q_PROPERTY(unsigned int uid READ uid WRITE setUid NOTIFY uidChanged FINAL)
+
+/**
+ * @brief The current image path.
+ */
+Q_PROPERTY(QString path READ path NOTIFY pathChanged FINAL)
 
 public:
 	/**
@@ -68,11 +72,14 @@ public:
 	virtual unsigned int uid() const = 0;
 
 	/**
-	 * @brief Access the infographic path at the specified index
-	 *
-	 * @param index The index to access
+	 * @brief Move to the next infographic image
 	 */
-	Q_INVOKABLE virtual QString get(int index) const = 0;
+	Q_INVOKABLE virtual void next() = 0;
+
+	/**
+	 * @brief Access the current infographic image path
+	 */
+	virtual QString path() const = 0;
 
 Q_SIGNALS:
 	/**
@@ -81,6 +88,13 @@ Q_SIGNALS:
 	 * @param uid
 	 */
 	void uidChanged(unsigned int uid);
+
+	/**
+     * @brief The current infographic image path has changed
+     *
+     * @param path
+     */
+    void pathChanged(const QString &path);
 
 public Q_SLOTS:
 	/**

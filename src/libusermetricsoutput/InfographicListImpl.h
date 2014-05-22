@@ -25,10 +25,11 @@
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QFileSystemWatcher>
-#include <QtCore/QMultiMap>
 #include <QtCore/QThread>
 #include <QtCore/QTimer>
 #include <QtCore/QScopedPointer>
+
+#include <map>
 
 namespace UserMetricsOutput {
 
@@ -44,7 +45,9 @@ public:
 
 	void setUid(unsigned int uid) override;
 
-	QString get(int index) const override;
+	QString path() const override;
+
+	void next() override;
 
 protected Q_SLOTS:
 	void internalDirectoryChanged();
@@ -57,6 +60,12 @@ protected Q_SLOTS:
 	void timeout();
 
 protected:
+	typedef std::multimap<QString, QString> Files;
+
+	void findPreviousPosition();
+
+	void updateCurrentPosition();
+
 	void newDirectoryWatcher();
 
 	QThread m_workerThread;
@@ -73,7 +82,15 @@ protected:
 
 	DirectoryWatcher::Ptr m_directoryWatcher;
 
-	QMultiMap<QString, QString> m_files;
+	Files m_files;
+
+	Files::const_iterator m_iterator;
+
+	QString m_currentInfographic;
+
+	QString m_currentFileIdentity;
+
+	QString m_currentFile;
 };
 
 }
