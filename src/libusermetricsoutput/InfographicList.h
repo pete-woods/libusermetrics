@@ -74,7 +74,8 @@ public:
 	/**
 	 * @brief Move to the next infographic image
 	 */
-	Q_INVOKABLE virtual void next() = 0;
+	Q_INVOKABLE
+	virtual void next() = 0;
 
 	/**
 	 * @brief Access the current infographic image path
@@ -90,11 +91,11 @@ Q_SIGNALS:
 	void uidChanged(unsigned int uid);
 
 	/**
-     * @brief The current infographic image path has changed
-     *
-     * @param path
-     */
-    void pathChanged(const QString &path);
+	 * @brief The current infographic image path has changed
+	 *
+	 * @param path
+	 */
+	void pathChanged(const QString &path);
 
 public Q_SLOTS:
 	/**
