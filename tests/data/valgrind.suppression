@@ -61,6 +61,24 @@
 ###################
 
 {
+   Leak in QNetwork
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN35QNetworkConfigurationManagerPrivate20updateConfigurationsEv
+   fun:_ZN35QNetworkConfigurationManagerPrivate10initializeEv
+}
+
+{
    QThread seems to leak here
    Memcheck:Leak
    match-leak-kinds: definite
