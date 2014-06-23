@@ -20,6 +20,7 @@
 #include <usermetricsservice/Service.h>
 
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonDocument>
@@ -58,7 +59,15 @@ InfographicImpl::InfographicImpl(const QFile &path, bool click,
 
 	QVariantMap map(document.toVariant().toMap());
 
-	m_exec = map["exec"].toString();
+	QString exec(map["exec"].toString());
+
+	// Handle relative and absolute paths
+	if (QFileInfo(exec).isAbsolute()) {
+		m_exec = exec;
+	} else {
+		QDir parent(QFileInfo(m_path).dir());
+		m_exec = parent.filePath(exec);
+	}
 
 	QString type = map["type"].toString().toLower();
 	if (type == "iterate") {
