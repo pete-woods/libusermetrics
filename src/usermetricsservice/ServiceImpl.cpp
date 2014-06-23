@@ -27,7 +27,7 @@ using namespace UserMetricsService;
 using namespace std;
 
 ServiceImpl::ServiceImpl(const QDir &localDirectory, const QDir &cacheDirectory,
-		const QDir &packageInfographics, FileUtils::Ptr fileUtils,
+		const QDir &packageDirectory, FileUtils::Ptr fileUtils,
 		ResultTransport::Ptr resultTransport, Factory &factory) :
 		m_localDirectory(localDirectory), m_cacheDirectory(cacheDirectory), m_fileUtils(
 				fileUtils), m_resultTransport(resultTransport), m_factory(
@@ -40,10 +40,15 @@ ServiceImpl::ServiceImpl(const QDir &localDirectory, const QDir &cacheDirectory,
 		throw logic_error("Cannot create sources directory");
 	}
 
+	// First work out the infographics paths
 	m_clickPath = localDirectory.filePath("infographics");
 	m_infographicDirectories << m_clickPath;
+	QDir packageInfographics = packageDirectory.filePath("infographics");
 	m_infographicDirectories << packageInfographics.path();
-	m_sourcesDirectory = localDirectory.filePath("sources");
+
+	// Now work out the sources paths
+	m_sourcesDirectories << localDirectory.filePath("sources");
+	m_sourcesDirectories << packageDirectory.filePath("sources");
 
 	m_timer.setSingleShot(true);
 
@@ -58,7 +63,7 @@ ServiceImpl::ServiceImpl(const QDir &localDirectory, const QDir &cacheDirectory,
 	updateSourcesList();
 
 	m_infographicWatcher.addPaths(m_infographicDirectories);
-	m_sourcesWatcher.addPath(m_sourcesDirectory.path());
+	m_sourcesWatcher.addPaths(m_sourcesDirectories);
 
 	m_resultTransport->clear();
 
@@ -96,8 +101,11 @@ void ServiceImpl::updateInfographicList() {
 }
 
 void ServiceImpl::updateSourcesList() {
-	QSet<QString> fullNames(
-			m_fileUtils->listDirectory(m_sourcesDirectory, QDir::Files).toSet());
+	QSet<QString> fullNames;
+
+	for (const QString &directory : m_sourcesDirectories) {
+		fullNames.unite(m_fileUtils->listDirectory(directory, QDir::Files).toSet());
+	}
 
 	QSet<QString> names;
 	for (const QString &name : fullNames) {

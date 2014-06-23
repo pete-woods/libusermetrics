@@ -71,7 +71,7 @@ protected:
 
 	QFileSystemWatcher m_infographicWatcher;
 
-	QDir m_sourcesDirectory;
+	QList<QString> m_sourcesDirectories;
 
 	QFileSystemWatcher m_sourcesWatcher;
 

@@ -55,7 +55,7 @@ protected:
 
 	Service::Ptr newService() {
 		return Service::Ptr(
-				new ServiceImpl(localDir, cacheDir, QDir(TEST_INFOGRAPHICS_DIR),
+				new ServiceImpl(localDir, cacheDir, QDir(TEST_DATADIR),
 						fileUtils, resultTransport, *factory));
 	}
 

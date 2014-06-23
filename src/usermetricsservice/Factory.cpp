@@ -38,7 +38,7 @@ Service::Ptr Factory::singletonService() {
 		m_service.reset(
 				new ServiceImpl(QDir::home().filePath(".local/share/libusermetrics"),
 						QDir::home().filePath(".cache"),
-						QDir("/usr/share/libusermetrics/infographics"),
+						QDir("/usr/share/libusermetrics/"),
 						singletonFileUtils(), singletonResultTransport(),
 						*this));
 	}
