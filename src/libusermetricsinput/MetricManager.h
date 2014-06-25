@@ -64,6 +64,13 @@ public:
 	static MetricManager * getInstance();
 
 	/**
+	 * @brief Gets a new instance of the MetricManager with a specified APP_ID.
+	 *
+	 * If you want a singleton instance then hold onto this.
+	 */
+	static MetricManager * getInstance(const QString &appId);
+
+	/**
 	 * @brief Register a new Metric.
 	 *
 	 * @param dataSourceId The unique ID of the data source, e.g. "facebook"

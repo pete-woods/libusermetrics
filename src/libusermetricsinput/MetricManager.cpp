@@ -28,7 +28,11 @@ MetricManager::~MetricManager() {
 }
 
 MetricManager * MetricManager::getInstance() {
+	return getInstance(qgetenv("APP_ID"));
+}
+
+MetricManager * MetricManager::getInstance(const QString &appId) {
 	Factory::Ptr factory(new Factory());
 	return new MetricManagerImpl(factory, QDir::home().filePath(".cache"),
-			qgetenv("APP_ID"));
+			appId);
 }

@@ -5,6 +5,7 @@ libusermetricsinput.so.1 libusermetricsinput1 #MINVER#
  (c++)"UserMetricsInput::MetricUpdate::~MetricUpdate()@Base" 1.0.1
  (c++)"UserMetricsInput::MetricUpdate::~MetricUpdate()@Base" 1.0.1
  (c++)"UserMetricsInput::MetricManager::getInstance()@Base" 1.0.1
+ (c++)"UserMetricsInput::MetricManager::getInstance(QString const&)@Base" 0replaceme
  (c++)"UserMetricsInput::MetricManager::MetricManager(QObject*)@Base" 1.0.1
  (c++)"UserMetricsInput::MetricManager::MetricManager(QObject*)@Base" 1.0.1
  (c++)"UserMetricsInput::MetricManager::~MetricManager()@Base" 1.0.1
