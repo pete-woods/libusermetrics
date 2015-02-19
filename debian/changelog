@@ -1,3 +1,10 @@
+libusermetrics (1.1.1+15.04.20150219~rtm-0ubuntu1) 14.09; urgency=medium
+
+  [ Pete Woods ]
+  * Read translations from click packages (LP: #1327419)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 19 Feb 2015 09:31:21 +0000
+
 libusermetrics (1.1.1+14.10.20141020-0ubuntu1) utopic; urgency=low
 
   [ Ubuntu daily release ]
