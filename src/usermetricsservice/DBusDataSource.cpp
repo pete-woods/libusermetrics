@@ -44,7 +44,8 @@ DBusDataSource::DBusDataSource(int id, const QString &name,
 }
 
 DBusDataSource::~DBusDataSource() {
-	QDBusConnection connection(QDBusConnection::sessionBus());
+	QDBusConnection connection(QDBusConnection::connectToBus(
+                QDBusConnection::SessionBus, "usermetrics-sessionbus_2"));
 	connection.unregisterObject(m_path);
 }
 

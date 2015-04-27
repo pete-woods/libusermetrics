@@ -56,7 +56,8 @@ DBusUserData::DBusUserData(int id, const QString &username,
 }
 
 DBusUserData::~DBusUserData() {
-	QDBusConnection connection(QDBusConnection::sessionBus());
+	QDBusConnection connection(QDBusConnection::connectToBus(
+                QDBusConnection::SessionBus, "usermetrics-sessionbus_3"));
 	connection.unregisterObject(m_path);
 }
 
